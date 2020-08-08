@@ -1,8 +1,6 @@
 export const theme = {
-  primary: 'hsl(49,100%,58%)',
-  secondary: 'hsl(196,83%,75%)',
-  tertiary: 'hsl(106,47%,64%)',
-  grey100: 'hsl(0,0%,96%)',
-  grey200: 'hsl(0,0%,90%)',
-  black: 'hsl(0,0%,0%)',
+  bgc: '#383e56',
+  text: '#f69e7b',
+  color1: '#eedad1',
+  color2: '#d4b5b0',
 };
