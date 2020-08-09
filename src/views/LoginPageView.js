@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import HeaderText from 'components/atoms/HeaderText';
 import Button from 'components/atoms/Button';
@@ -39,7 +39,14 @@ const StyledErrorMessage = styled(ErrorMessage)`
   color: red;
 `;
 
+const StyledIncorrectMessage = styled.p`
+  color: red;
+  font-size: 20px;
+  text-decoration: underline;
+`;
+
 const LoginPageView = () => {
+  const [hide, setHide] = useState(false);
   const login = (email, password) => {
     fire
       .auth()
@@ -48,7 +55,7 @@ const LoginPageView = () => {
         console.log(u);
       })
       .catch((err) => {
-        alert('password or username is invalid');
+        setHide(true);
         console.log(err);
       });
   };
@@ -77,6 +84,11 @@ const LoginPageView = () => {
         >
           {({ isSubmitting }) => (
             <StyledForm>
+              {hide ? (
+                <StyledIncorrectMessage>
+                  Email or Password is invalid.Try again
+                </StyledIncorrectMessage>
+              ) : null}
               <StyledInput placeholder="Login" type="email" name="email" />
               <StyledErrorMessage name="email" component="div" />
               <StyledInput placeholder="password" type="password" name="password" />
