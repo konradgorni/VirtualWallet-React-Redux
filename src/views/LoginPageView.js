@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import HeaderText from 'components/atoms/HeaderText';
 import Button from 'components/atoms/Button';
 import fire from '../firebase/fire';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -12,78 +13,80 @@ const StyledWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `;
-
 const StyledContent = styled.div`
-  width: 50%;
-  height: 30vh;
+  width: 60%;
+  height: 35vh;
   margin: 0px auto;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   display: flex;
-  /* background-color: green; */
 `;
-const StyledInputWrapper = styled.div`
+const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 25vh;
   align-content: space-between;
-  /* background-color: red; */
 `;
-
-const StyledInput = styled.input`
+const StyledInput = styled(Field)`
   width: 300px;
   height: 60px;
   border-radius: 2px;
   border: none;
   padding: 15px;
 `;
+const StyledErrorMessage = styled(ErrorMessage)`
+  color: red;
+`;
 
 const LoginPageView = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  // const singup = (e) => {
-  //   e.preventDefault();
-  //   fire
-  //     .auth()
-  //     .createUserWithEmailAndPassword(username, password)
-  //     .then((u) => {
-  //       console.log(u);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-  const login = (e) => {
-    e.preventDefault();
+  const login = (email, password) => {
     fire
       .auth()
-      .signInWithEmailAndPassword(username, password)
+      .signInWithEmailAndPassword(email, password)
       .then((u) => {
         console.log(u);
       })
       .catch((err) => {
         alert('password or username is invalid');
+        console.log(err);
       });
   };
+
   return (
     <StyledWrapper>
       <StyledContent>
         <HeaderText>VirtualWallet</HeaderText>
-        <StyledInputWrapper>
-          <StyledInput
-            onChange={(event) => setUsername(event.target.value)}
-            type="text"
-            placeholder="login"
-          />
-          <StyledInput
-            onChange={(event) => setPassword(event.target.value)}
-            type="password"
-            placeholder="password"
-          />
-          <Button>alla</Button>
-        </StyledInputWrapper>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          validate={(values) => {
+            const errors = {};
+            if (!values.email) {
+              errors.email = 'Required';
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+              errors.email = 'Invalid email address';
+            }
+            if (!values.password) {
+              errors.password = 'Required';
+            }
+            return errors;
+          }}
+          onSubmit={({ email, password }) => {
+            login(email, password);
+          }}
+        >
+          {({ isSubmitting }) => (
+            <StyledForm>
+              <StyledInput placeholder="Login" type="email" name="email" />
+              <StyledErrorMessage name="email" component="div" />
+              <StyledInput placeholder="password" type="password" name="password" />
+              <StyledErrorMessage name="password" component="div" />
+              <Button disabled={isSubmitting} type="submit">
+                Login
+              </Button>
+            </StyledForm>
+          )}
+        </Formik>
       </StyledContent>
     </StyledWrapper>
   );
