@@ -1,7 +1,9 @@
 import styled, { css } from 'styled-components';
 
 const Button = styled.h1`
-  background-color: ${({ theme }) => theme.text2};
+  background-color: ${({ theme }) => theme.color2};
+  width: 250px;
+  height: 50px;
 
   ${({ medium }) =>
     medium &&

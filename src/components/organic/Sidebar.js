@@ -19,26 +19,25 @@ const StyledWrapper = styled.div`
 `;
 
 const StyledIcon = styled(FontAwesomeIcon)`
-  color: ${({ theme }) => theme.text};
+  transition: 0.5s ease-in-out;
+  :hover {
+    color: ${({ theme }) => theme.color1};
+  }
 `;
-
-const StyledLinkIcon = styled(Link)``;
 
 const Sidebar = () => {
   return (
     <StyledWrapper>
-      <StyledLinkIcon to="/login">
-        <StyledIcon icon={faWallet} size="4x" />
-      </StyledLinkIcon>
-      <StyledLinkIcon to="/stats">
-        <StyledIcon icon={faHome} size="3x" />
-      </StyledLinkIcon>
-      <StyledLinkIcon to="/transactions">
-        <StyledIcon icon={faExchangeAlt} size="3x" />
-      </StyledLinkIcon>
-      <StyledLinkIcon to="/">
-        <StyledIcon icon={faSignOutAlt} size="3x" />
-      </StyledLinkIcon>
+      <FontAwesomeIcon icon={faWallet} size="4x" color="#eedad1" />
+      <Link to="/stats">
+        <StyledIcon icon={faHome} size="3x" color="#f69e7b" />
+      </Link>
+      <Link to="/transactions">
+        <StyledIcon icon={faExchangeAlt} size="3x" color="#f69e7b" />
+      </Link>
+      <Link to="/">
+        <StyledIcon icon={faSignOutAlt} size="3x" color="#f69e7b" />
+      </Link>
     </StyledWrapper>
   );
 };

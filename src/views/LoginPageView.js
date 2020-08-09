@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import HeaderText from 'components/atoms/HeaderText';
-import LinkRouter from 'components/atoms/Link.styled';
+import Button from 'components/atoms/Button';
+import fire from '../firebase/fire';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -39,14 +40,49 @@ const StyledInput = styled.input`
 `;
 
 const LoginPageView = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  // const singup = (e) => {
+  //   e.preventDefault();
+  //   fire
+  //     .auth()
+  //     .createUserWithEmailAndPassword(username, password)
+  //     .then((u) => {
+  //       console.log(u);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+  const login = (e) => {
+    e.preventDefault();
+    fire
+      .auth()
+      .signInWithEmailAndPassword(username, password)
+      .then((u) => {
+        console.log(u);
+      })
+      .catch((err) => {
+        alert('password or username is invalid');
+      });
+  };
   return (
     <StyledWrapper>
       <StyledContent>
         <HeaderText>VirtualWallet</HeaderText>
         <StyledInputWrapper>
-          <StyledInput type="text" placeholder="login" />
-          <StyledInput type="password" placeholder="password" />
-          <LinkRouter btn name="LOGIN" to="/stats" />
+          <StyledInput
+            onChange={(event) => setUsername(event.target.value)}
+            type="text"
+            placeholder="login"
+          />
+          <StyledInput
+            onChange={(event) => setPassword(event.target.value)}
+            type="password"
+            placeholder="password"
+          />
+          <Button>alla</Button>
         </StyledInputWrapper>
       </StyledContent>
     </StyledWrapper>
