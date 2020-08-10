@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import HeaderText from 'components/atoms/HeaderText';
 import Button from 'components/atoms/Button';
 import fire from '../firebase/fire';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
+import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponents';
+import { useHistory } from 'react-router-dom';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -28,16 +30,6 @@ const StyledForm = styled(Form)`
   height: 25vh;
   align-content: space-between;
 `;
-const StyledInput = styled(Field)`
-  width: 300px;
-  height: 60px;
-  border-radius: 2px;
-  border: none;
-  padding: 15px;
-`;
-const StyledErrorMessage = styled(ErrorMessage)`
-  color: red;
-`;
 
 const StyledIncorrectMessage = styled.p`
   color: red;
@@ -47,16 +39,22 @@ const StyledIncorrectMessage = styled.p`
 
 const LoginPageView = () => {
   const [hide, setHide] = useState(false);
+  let history = useHistory();
+
   const login = (email, password) => {
     fire
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((u) => {
         console.log(u);
+        return history.push('/stats');
       })
       .catch((err) => {
         setHide(true);
         console.log(err);
+        setTimeout(() => {
+          setHide(false);
+        }, 4000);
       });
   };
 
@@ -78,8 +76,10 @@ const LoginPageView = () => {
             }
             return errors;
           }}
-          onSubmit={({ email, password }) => {
-            login(email, password);
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            login(values.email, values.password);
+            resetForm();
+            setSubmitting(false);
           }}
         >
           {({ isSubmitting }) => (
@@ -93,9 +93,7 @@ const LoginPageView = () => {
               <StyledErrorMessage name="email" component="div" />
               <StyledInput placeholder="password" type="password" name="password" />
               <StyledErrorMessage name="password" component="div" />
-              <Button disabled={isSubmitting} type="submit">
-                Login
-              </Button>
+              <Button type="submit">Login</Button>
             </StyledForm>
           )}
         </Formik>
