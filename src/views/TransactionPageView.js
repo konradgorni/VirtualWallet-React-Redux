@@ -14,7 +14,7 @@ const TransactionPageView = () => {
     <>
       <Sidebar />
       <StyledWrapper>
-        <h2>tekst</h2>
+        <h2>TRANSACTIONS</h2>
       </StyledWrapper>
     </>
   );

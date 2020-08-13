@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWallet, faHome, faExchangeAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
@@ -27,18 +27,20 @@ const StyledIcon = styled(FontAwesomeIcon)`
 
 const Sidebar = () => {
   return (
-    <StyledWrapper>
-      <FontAwesomeIcon icon={faWallet} size="4x" color="#eedad1" />
-      <Link to="/stats">
-        <StyledIcon icon={faHome} size="3x" color="#f69e7b" />
-      </Link>
-      <Link to="/transactions">
-        <StyledIcon icon={faExchangeAlt} size="3x" color="#f69e7b" />
-      </Link>
-      <Link to="/">
-        <StyledIcon icon={faSignOutAlt} size="3x" color="#f69e7b" />
-      </Link>
-    </StyledWrapper>
+    <>
+      <StyledWrapper>
+        <FontAwesomeIcon icon={faWallet} size="4x" color="#eedad1" />
+        <Link to="/authpagehome/stats">
+          <StyledIcon icon={faHome} size="3x" color="#f69e7b" />
+        </Link>
+        <Link to="/authpagehome/transactions">
+          <StyledIcon icon={faExchangeAlt} size="3x" color="#f69e7b" />
+        </Link>
+        <Link to="/">
+          <StyledIcon icon={faSignOutAlt} size="3x" color="#f69e7b" />
+        </Link>
+      </StyledWrapper>
+    </>
   );
 };
 export default Sidebar;

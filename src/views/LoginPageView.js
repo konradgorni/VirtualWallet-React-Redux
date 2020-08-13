@@ -6,6 +6,8 @@ import fire from '../firebase/fire';
 import { Formik, Form } from 'formik';
 import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponents';
 import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { changeAuth } from 'data/actions/changeAuth';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -37,7 +39,7 @@ const StyledIncorrectMessage = styled.p`
   text-decoration: underline;
 `;
 
-const LoginPageView = () => {
+const LoginPageView = ({ changeAuth }) => {
   const [hide, setHide] = useState(false);
   let history = useHistory();
 
@@ -47,7 +49,8 @@ const LoginPageView = () => {
       .signInWithEmailAndPassword(email, password)
       .then((u) => {
         console.log(u);
-        return history.push('/stats');
+        changeAuth();
+        return history.push('/authpagehome/stats');
       })
       .catch((err) => {
         setHide(true);
@@ -102,4 +105,10 @@ const LoginPageView = () => {
   );
 };
 
-export default LoginPageView;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeAuth: () => dispatch(changeAuth()),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(LoginPageView);

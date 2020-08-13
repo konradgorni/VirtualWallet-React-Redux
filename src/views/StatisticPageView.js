@@ -14,7 +14,7 @@ const StatisticPageView = () => {
     <>
       <Sidebar />
       <StyledWrapper>
-        <h2>tekst</h2>
+        <h2>STATISTICPAGEVIEW</h2>
       </StyledWrapper>
     </>
   );
