@@ -1,13 +1,22 @@
 import React from 'react';
-import { Link, Switch, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { auth } from 'firebase/fire';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWallet, faHome, faExchangeAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+  faWallet,
+  faHome,
+  faExchangeAlt,
+  faSignOutAlt,
+  faUsersCog,
+  faPlusSquare,
+} from '@fortawesome/free-solid-svg-icons';
 
 const StyledWrapper = styled.div`
   width: 15vw;
   height: 100vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   background-color: ${({ theme }) => theme.bgc};
@@ -26,6 +35,11 @@ const StyledIcon = styled(FontAwesomeIcon)`
 `;
 
 const Sidebar = () => {
+  let history = useHistory();
+  const singout = () => {
+    auth.signOut();
+    return history.push('/');
+  };
   return (
     <>
       <StyledWrapper>
@@ -36,9 +50,16 @@ const Sidebar = () => {
         <Link to="/authpagehome/transactions">
           <StyledIcon icon={faExchangeAlt} size="3x" color="#f69e7b" />
         </Link>
-        <Link to="/">
-          <StyledIcon icon={faSignOutAlt} size="3x" color="#f69e7b" />
+        <Link to="/authpagehome/newtransaction">
+          <StyledIcon icon={faPlusSquare} size="3x" color="#f69e7b" />
         </Link>
+        <Link to="/authpagehome/settings">
+          <StyledIcon icon={faUsersCog} size="3x" color="#f69e7b" />
+        </Link>
+
+        <div>
+          <StyledIcon onClick={singout} icon={faSignOutAlt} size="3x" color="#f69e7b" />
+        </div>
       </StyledWrapper>
     </>
   );

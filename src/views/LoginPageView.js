@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import HeaderText from 'components/atoms/HeaderText';
 import Button from 'components/atoms/Button';
-import fire from '../firebase/fire';
+import { auth } from '../firebase/fire';
 import { Formik, Form } from 'formik';
 import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponents';
 import { useHistory } from 'react-router-dom';
@@ -44,11 +44,9 @@ const LoginPageView = ({ changeAuth }) => {
   let history = useHistory();
 
   const login = (email, password) => {
-    fire
-      .auth()
+    auth
       .signInWithEmailAndPassword(email, password)
       .then((u) => {
-        console.log(u);
         changeAuth();
         return history.push('/authpagehome/stats');
       })

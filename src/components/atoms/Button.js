@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 
 const Button = styled.button`
@@ -23,6 +22,16 @@ const Button = styled.button`
     css`
       font-size: 45px;
     `}
+      ${({ colorauth }) =>
+        colorauth &&
+        css`
+          font-size: 30px;
+          background-color: ${({ theme }) => theme.color1};
+          :hover {
+            color: gray;
+            cursor: pointer;
+          }
+        `}
   ${({ small }) =>
     small &&
     css`
