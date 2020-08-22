@@ -8,6 +8,7 @@ import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponen
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { changeAuth } from 'data/actions/changeAuth';
+import { device } from 'theme/breakpoints';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -18,12 +19,15 @@ const StyledWrapper = styled.div`
   justify-content: center;
 `;
 const StyledContent = styled.div`
-  width: 60%;
+  width: 50%;
   height: 35vh;
   margin: 0px auto;
   justify-content: space-around;
   align-items: center;
   display: flex;
+  @media ${device.tablet} {
+    flex-direction: column;
+  }
 `;
 const StyledForm = styled(Form)`
   display: flex;
@@ -33,10 +37,29 @@ const StyledForm = styled(Form)`
   align-content: space-between;
 `;
 
+const Input = styled(StyledInput)`
+  @media ${device.mobileM} {
+    width: 250px;
+    margin: 0 auto;
+  }
+`;
+const StyledButton = styled(Button)`
+  @media ${device.mobileM} {
+    width: 250px;
+    margin: 0 auto;
+  }
+`;
+
 const StyledIncorrectMessage = styled.p`
   color: red;
   font-size: 20px;
   text-decoration: underline;
+`;
+
+const StyledHeader = styled(HeaderText)`
+  @media ${device.mobileM} {
+    font-size: 40px;
+  }
 `;
 
 const LoginPageView = ({ changeAuth }) => {
@@ -62,7 +85,7 @@ const LoginPageView = ({ changeAuth }) => {
   return (
     <StyledWrapper>
       <StyledContent>
-        <HeaderText>VirtualWallet</HeaderText>
+        <StyledHeader>VirtualWallet</StyledHeader>
         <Formik
           initialValues={{ email: '', password: '' }}
           validate={(values) => {
@@ -90,11 +113,11 @@ const LoginPageView = ({ changeAuth }) => {
                   Email or Password is invalid.Try again
                 </StyledIncorrectMessage>
               ) : null}
-              <StyledInput placeholder="Login" type="email" name="email" />
+              <Input placeholder="Login" type="email" name="email" />
               <StyledErrorMessage name="email" component="div" />
-              <StyledInput placeholder="password" type="password" name="password" />
+              <Input placeholder="password" type="password" name="password" />
               <StyledErrorMessage name="password" component="div" />
-              <Button type="submit">Login</Button>
+              <StyledButton type="submit">Login</StyledButton>
             </StyledForm>
           )}
         </Formik>

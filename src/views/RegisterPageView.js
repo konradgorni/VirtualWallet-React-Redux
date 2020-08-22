@@ -6,6 +6,7 @@ import fire from '../firebase/fire';
 import { Formik, Form } from 'formik';
 import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponents';
 import { useHistory } from 'react-router-dom';
+import { device } from 'theme/breakpoints';
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -23,12 +24,12 @@ const StyledContent = styled.div`
   align-items: center;
 `;
 const StyledForm = styled(Form)`
-  height: 40vh;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+  height: 45vh;
+
+  align-content: space-between;
 `;
 
 const StyledIncorrectMessage = styled.p`
@@ -36,7 +37,23 @@ const StyledIncorrectMessage = styled.p`
   font-size: 20px;
   text-decoration: underline;
 `;
+const StyledHeader = styled(HeaderText)`
+  @media ${device.mobileM} {
+    font-size: 40px;
+  }
+`;
 
+const Input = styled(StyledInput)`
+  @media ${device.mobileM} {
+    width: 250px;
+    margin: 0 auto;
+  }
+`;
+const ErrorMessage = styled(StyledErrorMessage)`
+  @media ${device.mobileM} {
+    margin: 0 auto;
+  }
+`;
 const strongRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
 const RegisterPageView = () => {
   const [hide, setHide] = useState(false);
@@ -61,7 +78,7 @@ const RegisterPageView = () => {
   return (
     <StyledWrapper>
       <StyledContent>
-        <HeaderText>VirtualWallet</HeaderText>
+        <StyledHeader>VirtualWallet</StyledHeader>
         <Formik
           initialValues={{ email: '', password: '', password2: '' }}
           validate={(values) => {
@@ -99,12 +116,12 @@ const RegisterPageView = () => {
                   Email or Password is invalid.Try again
                 </StyledIncorrectMessage>
               ) : null}
-              <StyledInput placeholder="E-mail" type="email" name="email" />
-              <StyledErrorMessage name="email" component="div" />
-              <StyledInput placeholder="password" type="password" name="password" />
-              <StyledErrorMessage name="password" component="div" />
-              <StyledInput placeholder="Repeat password" type="password" name="password2" />
-              <StyledErrorMessage name="password2" component="div" />
+              <Input placeholder="E-mail" type="email" name="email" />
+              <ErrorMessage name="email" component="div" />
+              <Input placeholder="password" type="password" name="password" />
+              <ErrorMessage name="password" component="div" />
+              <Input placeholder="Repeat password" type="password" name="password2" />
+              <ErrorMessage name="password2" component="div" />
               <Button type="submit">Register</Button>
             </StyledForm>
           )}
