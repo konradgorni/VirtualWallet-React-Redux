@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 const AuthPageHome = ({ userInfo }) => {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      // console.log(user);
       userInfo(user.email, user.uid);
     });
   });

@@ -71,6 +71,7 @@ const LoginPageView = ({ changeAuth }) => {
       .signInWithEmailAndPassword(email, password)
       .then((u) => {
         changeAuth();
+        console.log(u);
         return history.push('/authpagehome/stats');
       })
       .catch((err) => {

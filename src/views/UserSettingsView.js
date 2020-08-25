@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Formik, Form } from 'formik';
 import { connect } from 'react-redux';
-import { setWallet } from 'data/actions/setWallet';
+import { db } from 'firebase/fire';
+import { useHistory } from 'react-router-dom';
 import HeaderText from 'components/atoms/HeaderText';
 import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponents';
 import Button from 'components/atoms/Button';
@@ -33,13 +34,31 @@ const StyledHeader = styled(HeaderText)`
   color: white;
 `;
 
-const UserSettingsView = ({ setWallet }) => {
+const UserSettingsView = ({ userId }) => {
   const [currency, setCurrency] = useState('PLN');
+  let history = useHistory();
 
   const budget = (salary) => {
-    setWallet(salary, currency);
-    console.log(salary);
-    console.log(currency);
+    const docRef = db.collection('users').doc(userId);
+    const bilans = salary;
+
+    docRef
+      .get()
+      .then(function (doc) {
+        if (doc.exists) {
+          db.collection('users').doc(userId).update({
+            salary: salary,
+            currency: currency,
+          });
+          return history.push('/authpagehome/stats');
+        } else {
+          db.collection('users').doc(userId).set({ salary, currency, bilans });
+          return history.push('/authpagehome/stats');
+        }
+      })
+      .catch(function (error) {
+        console.log('Error getting document:', error);
+      });
   };
 
   return (
@@ -81,8 +100,10 @@ const UserSettingsView = ({ setWallet }) => {
   );
 };
 
-const mapDispatchToProps = {
-  setWallet,
+const mapStateToProps = (state) => {
+  return {
+    userId: state.User.uid,
+  };
 };
 
-export default connect(null, mapDispatchToProps)(UserSettingsView);
+export default connect(mapStateToProps, null)(UserSettingsView);

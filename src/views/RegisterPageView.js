@@ -64,7 +64,7 @@ const RegisterPageView = () => {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((u) => {
-        return history.push('/login');
+        return history.push('/authpagehome/settings');
       })
       .catch((err) => {
         console.log(err);

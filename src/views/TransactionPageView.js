@@ -51,8 +51,10 @@ const getData = () => {
   return today;
 };
 
-const TransactionPageView = ({ bilans, userID }) => {
-  const [transaction, useTransaction] = useState();
+const TransactionPageView = ({ userID }) => {
+  const [transactions, setTransactions] = useState();
+  const [bilans, setBilans] = useState(0);
+  const [currency, setCurrency] = useState(0);
 
   const data = useRef(getData());
   let idUser = userID;
@@ -63,7 +65,9 @@ const TransactionPageView = ({ bilans, userID }) => {
         .get()
         .then(function (doc) {
           if (doc.exists) {
-            console.log('Document data:', doc.data());
+            setTransactions(doc.data().transactions);
+            setBilans(doc.data().bilans);
+            setCurrency(doc.data().currency);
           } else {
             console.log('No such document!');
           }
@@ -87,19 +91,34 @@ const TransactionPageView = ({ bilans, userID }) => {
           </div>
           <div>
             <StyledIcon icon={faWallet} size="3x" color="#f69e7b" />
-            <p>{bilans}$</p>
+            <p>
+              {bilans}
+
+              {currency}
+            </p>
           </div>
         </StyledHeader>
         <Table striped bordered hover variant="light">
           <thead>
             <tr>
-              <th>#</th>
               <th>Title</th>
-              <th>Amount</th>
+              <th>Cost</th>
               <th>Date</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            {transactions ? (
+              transactions.reverse().map((transaction) => (
+                <tr key={transaction.title}>
+                  <th>{transaction.title}</th>
+                  <th>{transaction.cash}$</th>
+                  <th>{transaction.date}</th>
+                </tr>
+              ))
+            ) : (
+              <h1>Loading...</h1>
+            )}
+          </tbody>
         </Table>
       </StyledWrapper>
     </>
@@ -108,7 +127,6 @@ const TransactionPageView = ({ bilans, userID }) => {
 
 const mapStateToProps = (state) => {
   return {
-    bilans: state.Wallet.bilans,
     userID: state.User.uid,
   };
 };

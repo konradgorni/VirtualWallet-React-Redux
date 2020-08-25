@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Sidebar from 'components/organic/Sidebar';
 import { connect } from 'react-redux';
@@ -31,12 +31,33 @@ const StyledHeader = styled(HeaderText)`
 `;
 
 const NewTrasactionView = ({ addTransaction, userId }) => {
+  const [bilans, setBilans] = useState(0);
+  let idUser = userId;
+  useEffect(() => {
+    if (idUser != null) {
+      const docRef = db.collection('users').doc(idUser);
+      docRef
+        .get()
+        .then(function (doc) {
+          if (doc.exists) {
+            setBilans(doc.data().bilans);
+          } else {
+            console.log('No such document!');
+          }
+        })
+        .catch(function (error) {
+          console.log('Error getting document:', error);
+        });
+    }
+  }, [idUser]);
+
   const add = (title, cash) => {
     const docRef = db.collection('users').doc(userId);
+    const date = new Date().toLocaleDateString();
     let data = {
       title: title,
       cash: cash,
-      date: new Date().toLocaleDateString(),
+      date: date,
     };
 
     docRef
@@ -47,11 +68,15 @@ const NewTrasactionView = ({ addTransaction, userId }) => {
             .doc(userId)
             .update({
               transactions: firebase.firestore.FieldValue.arrayUnion(data),
+              bilans: bilans + cash,
             });
         } else {
           db.collection('users')
             .doc(userId)
-            .set({ transactions: [{ title: title, cash: cash }] });
+            .set({
+              transactions: [{ title: title, cash: cash, date: date }],
+              bilans: bilans + cash,
+            });
         }
       })
       .catch(function (error) {
@@ -65,7 +90,7 @@ const NewTrasactionView = ({ addTransaction, userId }) => {
       <StyledWrapper>
         <StyledHeader>Add new transaction</StyledHeader>
         <Formik
-          initialValues={{ title: '', cash: 0 }}
+          initialValues={{ title: '', cash: null }}
           validate={(values) => {
             const errors = {};
             if (values.title === '') {
@@ -89,7 +114,7 @@ const NewTrasactionView = ({ addTransaction, userId }) => {
             <StyledForm>
               <StyledInput placeholder="Title transaction" type="text" name="title" />
               <StyledErrorMessage name="title" component="div" />
-              <StyledInput placeholder="Money" type="number" name="cash" />
+              <StyledInput placeholder="Costs with sign -" type="number" name="cash" />
               <StyledErrorMessage name="cash" component="div" />
               <Button onClick={add} type="submit">
                 ADD
