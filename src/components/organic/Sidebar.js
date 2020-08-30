@@ -12,6 +12,7 @@ import {
   faUsersCog,
   faPlusSquare,
 } from '@fortawesome/free-solid-svg-icons';
+import { device } from 'theme/breakpoints';
 
 const StyledWrapper = styled.div`
   width: 15vw;
@@ -28,7 +29,15 @@ const StyledWrapper = styled.div`
 `;
 
 const StyledIcon = styled(FontAwesomeIcon)`
+  font-size: 55px;
   transition: 0.5s ease-in-out;
+  @media ${device.tablet} {
+    font-size: 45px;
+  }
+  @media ${device.mobileM} {
+    font-size: 35px;
+  }
+
   :hover {
     color: ${({ theme }) => theme.color1};
   }
@@ -43,18 +52,18 @@ const Sidebar = () => {
   return (
     <>
       <StyledWrapper>
-        <FontAwesomeIcon icon={faWallet} size="4x" color="#eedad1" />
+        <StyledIcon icon={faWallet} size="4x" color="#eedad1" />
         <Link to="/authpagehome/stats">
-          <StyledIcon icon={faHome} size="3x" color="#f69e7b" />
+          <StyledIcon icon={faHome} color="#f69e7b" />
         </Link>
         <Link to="/authpagehome/transactions">
-          <StyledIcon icon={faExchangeAlt} size="3x" color="#f69e7b" />
+          <StyledIcon icon={faExchangeAlt} color="#f69e7b" />
         </Link>
         <Link to="/authpagehome/newtransaction">
-          <StyledIcon icon={faPlusSquare} size="3x" color="#f69e7b" />
+          <StyledIcon icon={faPlusSquare} color="#f69e7b" />
         </Link>
         <Link to="/authpagehome/settings">
-          <StyledIcon icon={faUsersCog} size="3x" color="#f69e7b" />
+          <StyledIcon icon={faUsersCog} color="#f69e7b" />
         </Link>
 
         <div>

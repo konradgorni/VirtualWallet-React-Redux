@@ -36,6 +36,7 @@ const Button = styled.button`
     small &&
     css`
       font-size: 35px;
+      width: 100%;
     `}
 `;
 

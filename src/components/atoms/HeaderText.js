@@ -16,6 +16,11 @@ const HeaderText = styled.h1`
     css`
       font-size: 35px;
     `}
+      ${({ white }) =>
+        white &&
+        css`
+          color: white;
+        `}
 `;
 
 export default HeaderText;

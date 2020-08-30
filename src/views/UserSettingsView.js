@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import { db } from 'firebase/fire';
 import { useHistory } from 'react-router-dom';
 import HeaderText from 'components/atoms/HeaderText';
-import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponents';
+import { Input, StyledErrorMessage } from 'components/atoms/FormikComponents';
 import Button from 'components/atoms/Button';
+import { device } from 'theme/breakpoints';
 
 const StyledWrapper = styled.div`
   width: 85vw;
@@ -26,12 +27,30 @@ const StyledForm = styled(Form)`
 const StyledSelect = styled.select`
   width: 300px;
   height: 60px;
+  @media ${device.mobileS} {
+    width: 100%;
+  }
 `;
 
 const StyledHeader = styled(HeaderText)`
   text-align: center;
   padding: 5% 0;
   color: white;
+  @media ${device.mobileS} {
+    font-size: 35px;
+  }
+`;
+
+const StyledButton = styled(Button)`
+  @media ${device.mobileS} {
+    width: 100%;
+  }
+`;
+
+const StyledInput = styled(Input)`
+  @media ${device.mobileS} {
+    width: 100%;
+  }
 `;
 
 const UserSettingsView = ({ userId }) => {
@@ -45,6 +64,8 @@ const UserSettingsView = ({ userId }) => {
     docRef
       .get()
       .then(function (doc) {
+        // const firstDateSallary = new Date().toLocaleDateString();
+        // const nextDateSallary = firstDateSallary.setDate(firstDateSallary.getDate() + 30);
         if (doc.exists) {
           db.collection('users').doc(userId).update({
             salary: salary,
@@ -52,7 +73,11 @@ const UserSettingsView = ({ userId }) => {
           });
           return history.push('/authpagehome/stats');
         } else {
-          db.collection('users').doc(userId).set({ salary, currency, bilans });
+          db.collection('users').doc(userId).set({
+            salary,
+            currency,
+            bilans,
+          });
           return history.push('/authpagehome/stats');
         }
       })
@@ -92,7 +117,7 @@ const UserSettingsView = ({ userId }) => {
                 <option value="CHF">CHF</option>
               </optgroup>
             </StyledSelect>
-            <Button type="submit">Save</Button>
+            <StyledButton type="submit">Save</StyledButton>
           </StyledForm>
         )}
       </Formik>

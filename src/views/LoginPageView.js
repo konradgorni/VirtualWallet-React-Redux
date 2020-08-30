@@ -4,7 +4,7 @@ import HeaderText from 'components/atoms/HeaderText';
 import Button from 'components/atoms/Button';
 import { auth } from '../firebase/fire';
 import { Formik, Form } from 'formik';
-import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponents';
+import { Input, StyledErrorMessage } from 'components/atoms/FormikComponents';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { changeAuth } from 'data/actions/changeAuth';
@@ -37,7 +37,7 @@ const StyledForm = styled(Form)`
   align-content: space-between;
 `;
 
-const Input = styled(StyledInput)`
+const StyledInput = styled(Input)`
   @media ${device.mobileM} {
     width: 250px;
     margin: 0 auto;
@@ -71,12 +71,10 @@ const LoginPageView = ({ changeAuth }) => {
       .signInWithEmailAndPassword(email, password)
       .then((u) => {
         changeAuth();
-        console.log(u);
         return history.push('/authpagehome/stats');
       })
       .catch((err) => {
         setHide(true);
-        console.log(err);
         setTimeout(() => {
           setHide(false);
         }, 4000);
@@ -114,9 +112,9 @@ const LoginPageView = ({ changeAuth }) => {
                   Email or Password is invalid.Try again
                 </StyledIncorrectMessage>
               ) : null}
-              <Input placeholder="Login" type="email" name="email" />
+              <StyledInput placeholder="Login" type="email" name="email" />
               <StyledErrorMessage name="email" component="div" />
-              <Input placeholder="password" type="password" name="password" />
+              <StyledInput placeholder="password" type="password" name="password" />
               <StyledErrorMessage name="password" component="div" />
               <StyledButton type="submit">Login</StyledButton>
             </StyledForm>

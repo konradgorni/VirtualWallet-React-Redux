@@ -4,7 +4,7 @@ import HeaderText from 'components/atoms/HeaderText';
 import Button from 'components/atoms/Button';
 import fire from '../firebase/fire';
 import { Formik, Form } from 'formik';
-import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponents';
+import { Input, StyledErrorMessage } from 'components/atoms/FormikComponents';
 import { useHistory } from 'react-router-dom';
 import { device } from 'theme/breakpoints';
 
@@ -43,7 +43,7 @@ const StyledHeader = styled(HeaderText)`
   }
 `;
 
-const Input = styled(StyledInput)`
+const StyledInput = styled(Input)`
   @media ${device.mobileM} {
     width: 250px;
     margin: 0 auto;
@@ -116,11 +116,11 @@ const RegisterPageView = () => {
                   Email or Password is invalid.Try again
                 </StyledIncorrectMessage>
               ) : null}
-              <Input placeholder="E-mail" type="email" name="email" />
+              <StyledInput placeholder="E-mail" type="email" name="email" />
               <ErrorMessage name="email" component="div" />
-              <Input placeholder="password" type="password" name="password" />
+              <StyledInput placeholder="password" type="password" name="password" />
               <ErrorMessage name="password" component="div" />
-              <Input placeholder="Repeat password" type="password" name="password2" />
+              <StyledInput placeholder="Repeat password" type="password" name="password2" />
               <ErrorMessage name="password2" component="div" />
               <Button type="submit">Register</Button>
             </StyledForm>

@@ -1,17 +1,17 @@
-import React from 'react';
-import styled from 'styled-components';
 import { Field, ErrorMessage } from 'formik';
-
-export const StyledInput = styled(Field)`
+import styled, { css } from 'styled-components';
+export const Input = styled(Field)`
   width: 300px;
   height: 60px;
   border-radius: 2px;
   border: none;
   padding: 15px;
+  ${({ smallMobile }) =>
+    smallMobile &&
+    css`
+      width: 100%;
+    `}
 `;
-// export const StyledInput = ({ placeholder, type, name }) => {
-//   return <Input placeholder={placeholder} type={type} name={name} />;
-// };
 
 export const StyledErrorMessage = styled(ErrorMessage)`
   color: red;

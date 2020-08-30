@@ -4,16 +4,20 @@ import Sidebar from 'components/organic/Sidebar';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import { db } from 'firebase/fire';
-import { Formik, Form } from 'formik';
-import { StyledInput, StyledErrorMessage } from 'components/atoms/FormikComponents';
+import { Formik, Form, Field } from 'formik';
+import { Input, StyledErrorMessage } from 'components/atoms/FormikComponents';
 import Button from 'components/atoms/Button';
 import HeaderText from 'components/atoms/HeaderText';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { device } from 'theme/breakpoints';
 
 const StyledWrapper = styled.div`
   width: 85vw;
   height: 100vh;
   margin-left: 15vw;
   background-color: ${({ theme }) => theme.color2};
+  overflow-x: hidden;
 `;
 
 const StyledForm = styled(Form)`
@@ -24,14 +28,73 @@ const StyledForm = styled(Form)`
   align-items: center;
 `;
 
+const StyledSelect = styled.select`
+  width: 300px;
+  height: 60px;
+  @media ${device.mobileS} {
+    width: 100%;
+  }
+`;
 const StyledHeader = styled(HeaderText)`
   text-align: center;
   padding: 5% 0;
   color: white;
+  @media ${device.mobileS} {
+    font-size: 35px;
+  }
+  @media ${device.mobileM} {
+    font-size: 35px;
+  }
 `;
 
-const NewTrasactionView = ({ addTransaction, userId }) => {
-  const [bilans, setBilans] = useState(0);
+const StyledButton = styled(Button)`
+  @media ${device.mobileS} {
+    width: 100%;
+  }
+`;
+
+const StyledInput = styled(Input)`
+  @media ${device.mobileS} {
+    width: 100%;
+  }
+`;
+
+const NewTrasactionView = ({ userId }) => {
+  const [bilans, setBilans] = useState('');
+
+  const genereteRandomID = () => {
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (var i = 0; i < 5; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  };
+
+  const notify = (type) => {
+    if (type === 'success') {
+      toast.success('Transaction added!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      toast.error('Something went wrong :<', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
   let idUser = userId;
   useEffect(() => {
     if (idUser != null) {
@@ -51,15 +114,18 @@ const NewTrasactionView = ({ addTransaction, userId }) => {
     }
   }, [idUser]);
 
-  const add = (title, cash) => {
+  const add = (title, cash, type) => {
     const docRef = db.collection('users').doc(userId);
+
     const date = new Date().toLocaleDateString();
     let data = {
       title: title,
       cash: cash,
       date: date,
+      type: type,
+      id: genereteRandomID(),
     };
-
+    // console.log(title, cash, type);
     docRef
       .get()
       .then(function (doc) {
@@ -74,13 +140,16 @@ const NewTrasactionView = ({ addTransaction, userId }) => {
           db.collection('users')
             .doc(userId)
             .set({
-              transactions: [{ title: title, cash: cash, date: date }],
+              transactions: [
+                { title: title, cash: cash, date: date, type: type, id: genereteRandomID() },
+              ],
               bilans: bilans + cash,
             });
         }
+        notify('success');
       })
       .catch(function (error) {
-        // console.log('Error getting document:', error);
+        console.log(error);
       });
   };
 
@@ -90,7 +159,7 @@ const NewTrasactionView = ({ addTransaction, userId }) => {
       <StyledWrapper>
         <StyledHeader>Add new transaction</StyledHeader>
         <Formik
-          initialValues={{ title: '', cash: null }}
+          initialValues={{ title: '', cash: '', type: 'INCOME' }}
           validate={(values) => {
             const errors = {};
             if (values.title === '') {
@@ -105,8 +174,9 @@ const NewTrasactionView = ({ addTransaction, userId }) => {
             return errors;
           }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
-            add(values.title, values.cash);
-            resetForm();
+            console.log(values);
+            add(values.title, values.cash, values.type);
+            resetForm({ title: '', cash: '', type: '' });
             setSubmitting(false);
           }}
         >
@@ -116,9 +186,19 @@ const NewTrasactionView = ({ addTransaction, userId }) => {
               <StyledErrorMessage name="title" component="div" />
               <StyledInput placeholder="Costs with sign -" type="number" name="cash" />
               <StyledErrorMessage name="cash" component="div" />
-              <Button onClick={add} type="submit">
-                ADD
-              </Button>
+              <Field name="type" as={StyledSelect}>
+                <option value="INCOME">INCOME</option>
+                <option value="BILLS">BILLS</option>
+                <option value="FOOD">FOOD</option>
+                <option value="ENTERTAINMENT">ENTERTAINMENT</option>
+                <option value="CAR">CAR</option>
+                <option value="UNEXPECTED EXPENSES">UNEXPECTED EXPENSES</option>
+                <option value="OTHER">OTHER</option>
+              </Field>
+              <StyledButton onClick={add} type="submit">
+                Add
+              </StyledButton>
+              <ToastContainer />
             </StyledForm>
           )}
         </Formik>
