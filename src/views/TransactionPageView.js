@@ -10,24 +10,27 @@ import HeaderText from 'components/atoms/HeaderText';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import { device } from 'theme/breakpoints';
 
 const StyledWrapper = styled.div`
   width: 85vw;
-  height: 100vh;
+  height: auto;
   margin-left: 15vw;
   background-color: ${({ theme }) => theme.color2};
+  padding: 1%;
   overflow-x: hidden;
+  @media ${device.tablet} {
+    padding: 0;
+  }
 `;
 
 const StyledHeader = styled.div`
   width: 100%;
-  height: 10vh;
+  height: 15vh;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: space-between;
 
   div {
-    height: 100%;
     display: flex;
     align-items: center;
 
@@ -49,10 +52,27 @@ const StyledIcon = styled(FontAwesomeIcon)`
 
 const StyledTableWrapper = styled.div`
   width: 100%;
-  margin-top: 5vh;
-  height: 85vh;
+  height: auto;
 `;
-
+const StyledHeaderTitle = styled(HeaderText)`
+  text-align: center;
+  color: white;
+  font-size: 45px;
+  @media ${device.mobileL} {
+    font-size: 40px;
+  }
+`;
+const StyledNav = styled.div`
+  width: 100%;
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+`;
+const StyledBootstrapTable = styled(BootstrapTable)`
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
 const getData = () => {
   let today = new Date().toLocaleDateString();
   return today;
@@ -60,19 +80,31 @@ const getData = () => {
 
 const TransactionPageView = ({ userID }) => {
   const [transactions, setTransactions] = useState();
+
   const [bilans, setBilans] = useState(0);
   const [currency, setCurrency] = useState(0);
 
   const { SearchBar } = Search;
   const StyledSearch = styled(SearchBar)`
-    width: 300px;
-    height: 50px;
+    width: 350px;
+    height: 80px;
+    @media ${device.mobileX} {
+      width: 85vw;
+    }
   `;
 
+  const SearchWrapper = styled.div`
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  `;
   const products = [];
 
   const data = useRef(getData());
-  let idUser = userID;
+  const idUser = userID;
   useEffect(() => {
     if (idUser != null) {
       const docRef = db.collection('users').doc(idUser);
@@ -96,22 +128,47 @@ const TransactionPageView = ({ userID }) => {
     {
       dataField: 'id',
       text: 'ID',
+      style: {
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+      },
     },
     {
       dataField: 'title',
       text: 'Title',
+      style: {
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+      },
     },
     {
       dataField: 'cash',
       text: 'Money',
+      style: {
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+      },
     },
     {
       dataField: 'type',
       text: 'Type',
+      style: {
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+      },
     },
     {
       dataField: 'date',
       text: 'Date',
+      style: {
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+      },
     },
   ];
 
@@ -131,9 +188,7 @@ const TransactionPageView = ({ userID }) => {
             <StyledIcon icon={faCalendarDay} size="3x" />
             <p>{data.current}</p>
           </div>
-          <div>
-            <HeaderText white>Last transactions</HeaderText>
-          </div>
+
           <div>
             <StyledIcon icon={faWallet} size="3x" />
             <p>
@@ -142,14 +197,21 @@ const TransactionPageView = ({ userID }) => {
             </p>
           </div>
         </StyledHeader>
+        <StyledNav>
+          <StyledHeaderTitle white>Last transactions</StyledHeaderTitle>
+        </StyledNav>
         <StyledTableWrapper>
           <ToolkitProvider keyField="id" data={products} columns={columns} search>
             {(props) => (
-              <div>
-                <StyledSearch placeholder="Title transaction" {...props.searchProps} />
+              <>
+                <SearchWrapper>
+                  {' '}
+                  <StyledSearch placeholder="Title transaction" {...props.searchProps} />
+                </SearchWrapper>
+
                 <hr />
-                <BootstrapTable {...props.baseProps} />
-              </div>
+                <StyledBootstrapTable {...props.baseProps} />
+              </>
             )}
           </ToolkitProvider>
         </StyledTableWrapper>

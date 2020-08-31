@@ -46,7 +46,6 @@ const StyledHeader = styled(HeaderText)`
     font-size: 35px;
   }
 `;
-
 const StyledButton = styled(Button)`
   @media ${device.mobileS} {
     width: 100%;
@@ -63,10 +62,10 @@ const NewTrasactionView = ({ userId }) => {
   const [bilans, setBilans] = useState('');
 
   const genereteRandomID = () => {
-    var text = '';
-    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (var i = 0; i < 5; i++)
+    for (let i = 0; i < 5; i++)
       text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
@@ -95,7 +94,7 @@ const NewTrasactionView = ({ userId }) => {
       });
     }
   };
-  let idUser = userId;
+  const idUser = userId;
   useEffect(() => {
     if (idUser != null) {
       const docRef = db.collection('users').doc(idUser);
@@ -118,11 +117,11 @@ const NewTrasactionView = ({ userId }) => {
     const docRef = db.collection('users').doc(userId);
 
     const date = new Date().toLocaleDateString();
-    let data = {
-      title: title,
-      cash: cash,
-      date: date,
-      type: type,
+    const data = {
+      title,
+      cash,
+      date,
+      type,
       id: genereteRandomID(),
     };
     // console.log(title, cash, type);
@@ -140,9 +139,7 @@ const NewTrasactionView = ({ userId }) => {
           db.collection('users')
             .doc(userId)
             .set({
-              transactions: [
-                { title: title, cash: cash, date: date, type: type, id: genereteRandomID() },
-              ],
+              transactions: [{ title, cash, date, type, id: genereteRandomID() }],
               bilans: bilans + cash,
             });
         }
