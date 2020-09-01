@@ -1,26 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Sidebar from 'components/organic/Sidebar';
 import { db } from 'firebase/fire';
 import { connect } from 'react-redux';
-import { RadialChart } from 'react-vis';
 import { device } from 'theme/breakpoints';
+import PropTypes from 'prop-types';
 
 const StatisticPageView = ({ userID }) => {
   const [type, setTypes] = useState();
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
-  const [width, setWidth] = useState(500);
-  let bilans = [];
-  let listTypeTransactions = [];
+
+  const bilans = [];
+  const listTypeTransactions = [];
 
   const StyledWrapper = styled.div`
     width: 85vw;
-    height: 100vh;
     margin-left: 15vw;
+    min-height: 100vh;
+    background-color: ${({ theme }) => theme.color2};
+    overflow-x: hidden;
+  `;
+  const StyledText = styled.p`
+    font-size: 45px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
   `;
 
-  let idUser = userID;
+  const idUser = userID;
   useEffect(() => {
     if (idUser != null) {
       const docRef = db.collection('users').doc(idUser);
@@ -28,8 +35,8 @@ const StatisticPageView = ({ userID }) => {
         .get()
         .then(function (doc) {
           if (doc.exists) {
-            const transactions = doc.data().transactions;
-            let transactionsType = {
+            const { transactions } = doc.data().transactions;
+            const transactionsType = {
               INCOME: 0,
               BILLS: 0,
               FOOD: 0,
@@ -39,69 +46,63 @@ const StatisticPageView = ({ userID }) => {
               ENTERTAINMENT: 0,
             };
             transactions.map((transaction) => {
-              const type = transaction.type;
-              transactionsType[type] = transactionsType[type] + 1;
+              const typeTr = transaction.type;
+              transactionsType[typeTr] += +1;
+              return null;
             });
             let incomeCounter = 0;
             let expensesCounter = 0;
             transactions.map((transaction) => {
-              const type = transaction.cash;
-              if (type > 0) {
-                incomeCounter = incomeCounter + type;
-              } else if (type < 0) {
-                expensesCounter = expensesCounter + type;
+              const cashSymbol = transaction.cash;
+              if (cashSymbol > 0) {
+                incomeCounter += cashSymbol;
+              } else if (cashSymbol < 0) {
+                expensesCounter += cashSymbol;
               }
               setExpenses(expensesCounter);
               setIncome(incomeCounter);
+              return null;
             });
 
             setTypes(transactionsType);
           } else {
-            console.log('No such document!');
+            alert('No found user data.');
           }
         })
         .catch(function (error) {
-          console.log('Error getting document:', error);
+          console.error(error);
         });
     }
-    let width = window.innerWidth;
-    let sideBarSize = width * 0.15;
-    width = width - sideBarSize;
-    setWidth(window.innerWidth);
   }, [idUser]);
 
   if (type !== undefined) {
     const data = type;
-    listTypeTransactions = [];
+
     for (let i = 0; i < 7; i++) {
       const name = Object.keys(data)[i];
       const value = Object.values(data)[i];
-      if (value === 0) {
-      } else {
+      if (value !== 0) {
         listTypeTransactions.push({ angle: value, radius: 10, label: name });
       }
     }
-  } else {
   }
+
   if (expenses && income !== 0) {
     const incomeLocal = income;
     let expensesLocal = expenses;
-    expensesLocal = expensesLocal * -1;
+    expensesLocal *= -1;
 
     bilans.push(
       { angle: incomeLocal, radius: 10, label: 'Income' },
       { angle: expensesLocal, radius: 10, label: 'Expenses' },
     );
   }
-  console.log(window.innerWidth);
 
   return (
     <>
-      <Sidebar />
       <StyledWrapper>
-        <h2>STATISTICPAGEVIEW</h2>
-        <RadialChart showLabels data={bilans} height={width} width={width} />
-        <RadialChart showLabels data={listTypeTransactions} height={100} width={100} />
+        <StyledText>Twoje wydatki</StyledText>
+        <StyledText>Na co wypadjesz</StyledText>
       </StyledWrapper>
     </>
   );
@@ -111,6 +112,10 @@ const mapStateToProps = (state) => {
   return {
     userID: state.User.uid,
   };
+};
+
+StatisticPageView.propTypes = {
+  userID: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps, null)(StatisticPageView);

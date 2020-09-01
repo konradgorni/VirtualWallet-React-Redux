@@ -1,7 +1,7 @@
-export const userInfo = (email, uid) => {
+export const userInfoAction = (email, uid) => {
   return {
     type: 'ADD_INFO',
-    email: email,
-    uid: uid,
+    email,
+    uid,
   };
 };

@@ -6,8 +6,9 @@ import NewTrasactionView from 'views/NewTrasactionView';
 import StatisticPageView from 'views/StatisticPageView';
 import UserSettingsView from 'views/UserSettingsView';
 import { auth } from 'firebase/fire';
-import { userInfo } from 'data/actions/userInfo';
+import { userInfoAction } from 'data/actions/userInfo';
 import { connect } from 'react-redux';
+import { PropTypes } from 'prop-types';
 
 const AuthPageHome = ({ userInfo }) => {
   useEffect(() => {
@@ -28,9 +29,16 @@ const AuthPageHome = ({ userInfo }) => {
   );
 };
 
+AuthPageHome.propTypes = {
+  userInfo: PropTypes.shape({
+    email: PropTypes.string,
+    uid: PropTypes.string,
+  }).isRequired,
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    userInfo: (email, uid) => dispatch(userInfo(email, uid)),
+    userInfo: (email, uid) => dispatch(userInfoAction(email, uid)),
   };
 };
 

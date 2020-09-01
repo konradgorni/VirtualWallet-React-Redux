@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { auth } from 'firebase/fire';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faWallet,
@@ -44,7 +43,7 @@ const StyledIcon = styled(FontAwesomeIcon)`
 `;
 
 const Sidebar = () => {
-  let history = useHistory();
+  const history = useHistory();
   const singout = () => {
     auth.signOut();
     return history.push('/');
