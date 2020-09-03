@@ -173,7 +173,7 @@ const NewTrasactionView = ({ userId }) => {
           onSubmit={(values, { setSubmitting, resetForm }) => {
             console.log(values);
             add(values.title, values.cash, values.type);
-            resetForm({ title: '', cash: '', type: '' });
+            resetForm({ title: '', cash: 0, type: '' });
             setSubmitting(false);
           }}
         >
@@ -189,7 +189,7 @@ const NewTrasactionView = ({ userId }) => {
                 <option value="FOOD">FOOD</option>
                 <option value="ENTERTAINMENT">ENTERTAINMENT</option>
                 <option value="CAR">CAR</option>
-                <option value="UNEXPECTED EXPENSES">UNEXPECTED EXPENSES</option>
+                <option value="UNEXPECTED">UNEXPECTED EXPENSES</option>
                 <option value="OTHER">OTHER</option>
               </Field>
               <StyledButton onClick={add} type="submit">

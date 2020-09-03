@@ -14,7 +14,8 @@ import {
 import { device } from 'theme/breakpoints';
 
 const StyledWrapper = styled.div`
-  width: 15vw;
+  width: 15%;
+  /* width: 15vw; */
   height: 100vh;
   position: fixed;
   top: 0;

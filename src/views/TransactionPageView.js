@@ -14,7 +14,7 @@ import { device } from 'theme/breakpoints';
 
 const StyledWrapper = styled.div`
   width: 85vw;
-  height: auto;
+  min-height: 100vh;
   margin-left: 15vw;
   background-color: ${({ theme }) => theme.color2};
   padding: 1%;
