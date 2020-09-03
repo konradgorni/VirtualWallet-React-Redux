@@ -4,6 +4,8 @@ import { db } from 'firebase/fire';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import HeaderText from 'components/atoms/HeaderText';
+import { device } from 'theme/breakpoints';
+
 const LineChart = ({ userID }) => {
   const [types, setTypes] = useState();
   const [income, setIncome] = useState(0);
@@ -18,7 +20,16 @@ const LineChart = ({ userID }) => {
     flex-direction: column;
     align-items: center;
   `;
-
+  const StyledHeaderText = styled(HeaderText)`
+    text-align: center;
+    padding: 5% 0;
+    @media ${device.laptop} {
+      font-size: 35px;
+    }
+    @media ${device.tablet} {
+      font-size: 32px;
+    }
+  `;
   const idUser = userID;
   useEffect(() => {
     if (idUser != null) {
@@ -111,7 +122,7 @@ const LineChart = ({ userID }) => {
   };
   const options = {
     title: {
-      display: true,
+      display: false,
       text: 'Type of your transactions',
       maintainAspectRatio: false,
     },
@@ -124,7 +135,9 @@ const LineChart = ({ userID }) => {
           <HeaderText white>Add your first transaction if you want see stats.</HeaderText>
         ) : (
           <>
+            <StyledHeaderText white>Your income vs expenses</StyledHeaderText>
             <Doughnut data={bilans} options={options} />
+            <StyledHeaderText white>Type of your transactions</StyledHeaderText>
 
             <Doughnut data={typeTransactions} options={options} />
           </>

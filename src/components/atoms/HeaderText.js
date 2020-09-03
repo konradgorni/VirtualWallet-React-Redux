@@ -5,6 +5,7 @@ const HeaderText = styled.h1`
   padding: 0;
   margin: 0;
   font-size: 55px;
+  text-align:center;
 
   ${({ medium }) =>
     medium &&
