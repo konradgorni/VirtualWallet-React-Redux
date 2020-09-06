@@ -64,12 +64,14 @@ const UserSettingsView = ({ userId }) => {
     docRef
       .get()
       .then(function (doc) {
-        // const firstDateSallary = new Date().toLocaleDateString();
-        // const nextDateSallary = firstDateSallary.setDate(firstDateSallary.getDate() + 30);
+        let nextPaymentDate = new Date();
+        nextPaymentDate.setDate(nextPaymentDate.getDate() + 30);
+        const fry = nextPaymentDate.toLocaleDateString();
         if (doc.exists) {
           db.collection('users').doc(userId).update({
             salary: salary,
             currency: currency,
+            nextPaymentDate: fry,
           });
           return history.push('/authpagehome/stats');
         } else {
@@ -77,6 +79,7 @@ const UserSettingsView = ({ userId }) => {
             salary,
             currency,
             bilans,
+            nextPaymentDate: fry,
           });
           return history.push('/authpagehome/stats');
         }

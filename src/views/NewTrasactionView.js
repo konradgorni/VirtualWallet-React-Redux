@@ -60,6 +60,8 @@ const StyledInput = styled(Input)`
 
 const NewTrasactionView = ({ userId }) => {
   const [bilans, setBilans] = useState('');
+  const [NextPaymentDate, setDateNextPayment] = useState('');
+  const [sallary, setSallary] = useState();
 
   const genereteRandomID = () => {
     let text = '';
@@ -94,28 +96,10 @@ const NewTrasactionView = ({ userId }) => {
       });
     }
   };
-  const idUser = userId;
-  useEffect(() => {
-    if (idUser != null) {
-      const docRef = db.collection('users').doc(idUser);
-      docRef
-        .get()
-        .then(function (doc) {
-          if (doc.exists) {
-            setBilans(doc.data().bilans);
-          } else {
-            console.log('No such document!');
-          }
-        })
-        .catch(function (error) {
-          console.log('Error getting document:', error);
-        });
-    }
-  }, [idUser]);
 
-  const add = (title, cash, type) => {
+  const add = (title, cash, type, paymentAdded) => {
     const docRef = db.collection('users').doc(userId);
-
+    let montlyPayment = paymentAdded;
     const date = new Date().toLocaleDateString();
     const data = {
       title,
@@ -124,7 +108,7 @@ const NewTrasactionView = ({ userId }) => {
       type,
       id: genereteRandomID(),
     };
-    // console.log(title, cash, type);
+
     docRef
       .get()
       .then(function (doc) {
@@ -135,6 +119,14 @@ const NewTrasactionView = ({ userId }) => {
               transactions: firebase.firestore.FieldValue.arrayUnion(data),
               bilans: bilans + cash,
             });
+          if (montlyPayment === true) {
+            let nextPaymentDate = new Date();
+            nextPaymentDate.setDate(nextPaymentDate.getDate() + 30);
+            const fry = nextPaymentDate.toLocaleDateString();
+            db.collection('users').doc(userId).update({
+              nextPaymentDate: fry,
+            });
+          }
         } else {
           db.collection('users')
             .doc(userId)
@@ -149,6 +141,40 @@ const NewTrasactionView = ({ userId }) => {
         console.log(error);
       });
   };
+
+  const nextPaymentChecker = (payDate, sallary) => {
+    let nextPaymentDate = new Date().toLocaleDateString();
+    const currentDay = nextPaymentDate.substr(0, 1);
+    const currentMonth = nextPaymentDate.substr(2, 2);
+
+    const payDateDay = payDate.substr(0, 1);
+    const payDateMonth = payDate.substr(2, 2);
+
+    if (currentDay === payDateDay && currentMonth === payDateMonth) {
+      add('Montly Payment', sallary, 'INCOME', true);
+    }
+  };
+
+  const idUser = userId;
+  useEffect(() => {
+    if (idUser != null) {
+      const docRef = db.collection('users').doc(idUser);
+      docRef
+        .get()
+        .then(function (doc) {
+          if (doc.exists) {
+            setBilans(doc.data().bilans);
+            nextPaymentChecker(doc.data().nextPaymentDate, doc.data().salary);
+            setSallary(doc.data().sallary);
+          } else {
+            console.log('No such document!');
+          }
+        })
+        .catch(function (error) {
+          console.log('Error getting document:', error);
+        });
+    }
+  }, [idUser]);
 
   return (
     <>
@@ -172,7 +198,7 @@ const NewTrasactionView = ({ userId }) => {
           }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             console.log(values);
-            add(values.title, values.cash, values.type);
+            add(values.title, values.cash, values.type, false);
             resetForm({ title: '', cash: 0, type: '' });
             setSubmitting(false);
           }}
