@@ -65,19 +65,20 @@ const UserSettingsView = ({ userId }) => {
       .then(function (doc) {
         let nextPaymentDate = new Date();
         nextPaymentDate.setDate(nextPaymentDate.getDate() + 30);
-        const fry = nextPaymentDate.toLocaleDateString();
+        const nextPaymentDateFormatting = nextPaymentDate.toLocaleDateString();
         if (doc.exists) {
           db.collection('users').doc(userId).update({
             salary: salary,
             currency: currency,
-            nextPaymentDate: fry,
+            nextPaymentDate: nextPaymentDateFormatting,
           });
           return history.push('/authpagehome/stats');
         } else {
           db.collection('users').doc(userId).set({
             salary,
             currency,
-            nextPaymentDate: fry,
+            nextPaymentDate: nextPaymentDateFormatting,
+            emptyTransactions: true,
           });
           return history.push('/authpagehome/stats');
         }

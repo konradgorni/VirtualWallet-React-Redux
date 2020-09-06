@@ -15,7 +15,7 @@ const AuthPageHome = ({ userInfo }) => {
     auth.onAuthStateChanged((user) => {
       userInfo(user.email, user.uid);
     });
-  });
+  }, []);
   return (
     <>
       <Sidebar />

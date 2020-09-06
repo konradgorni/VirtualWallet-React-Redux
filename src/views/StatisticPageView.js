@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import LineChart from 'components/organic/LineChart';
-import { device } from 'theme/breakpoints';
 
 const StatisticPageView = ({ userID }) => {
   const [width, setWidth] = useState(true);
 
   useEffect(() => {
     setWidth(window.innerWidth);
-  });
+  }, []);
 
   window.addEventListener('resize', () => setWidth(window.innerWidth));
 

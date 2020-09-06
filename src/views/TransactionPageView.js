@@ -127,7 +127,7 @@ const TransactionPageView = ({ userID }) => {
               }
 
               return null;
-            });
+            }, []);
 
             setTransactions(transactions);
             setBilans(incomeCounter + expensesCounter + salary);
@@ -192,7 +192,6 @@ const TransactionPageView = ({ userID }) => {
   {
     if (transactions) {
       transactions.reverse().map((transaction) => products.push(transaction));
-      console.log(products);
     }
   }
 

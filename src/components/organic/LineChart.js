@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { db } from 'firebase/fire';
 import { connect } from 'react-redux';
@@ -10,8 +10,7 @@ const LineChart = ({ userID }) => {
   const [types, setTypes] = useState();
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
-  const [width, setWidth] = useState();
-  const [activeStats, setActiveStats] = useState(false);
+  const [emptyTransactions, setEmptyTransactions] = useState();
 
   const StyledWrapper = styled.div`
     width: 100%;
@@ -39,9 +38,11 @@ const LineChart = ({ userID }) => {
         .then(function (doc) {
           if (doc.exists) {
             const transactions = doc.data().transactions;
-            if (transactions !== undefined) {
-              setActiveStats(true);
+            const empty = doc.data().emptyTransactions;
+            if (empty !== undefined) {
+              setEmptyTransactions(doc.data().emptyTransactions);
             }
+
             const transactionsType = {
               INCOME: 0,
               BILLS: 0,
@@ -84,23 +85,23 @@ const LineChart = ({ userID }) => {
         });
     }
   }, [idUser]);
-  const tran = [];
-  const mroko = [];
+  const labelsList = [];
+  const typesTransactions = [];
   if (types !== []) {
     for (var key in types) {
-      tran.push(key);
+      labelsList.push(key);
     }
-    for (var key in types) {
-      var value = types[key];
-      mroko.push(value);
+    for (let k in types) {
+      var value = types[k];
+      typesTransactions.push(value);
     }
   }
 
   const typeTransactions = {
-    labels: tran,
+    labels: labelsList,
     datasets: [
       {
-        data: mroko,
+        data: typesTransactions,
         backgroundColor: ['red', 'blue', 'yellow', 'green', 'pink', 'orange', 'dark'],
       },
     ],
@@ -131,17 +132,25 @@ const LineChart = ({ userID }) => {
   return (
     <>
       <StyledWrapper>
-        {activeStats === false ? (
-          <HeaderText white>Add your first transaction if you want see stats.</HeaderText>
-        ) : (
-          <>
-            <StyledHeaderText white>Your income vs expenses</StyledHeaderText>
-            <Doughnut data={bilans} options={options} />
-            <StyledHeaderText white>Type of your transactions</StyledHeaderText>
+        <Suspense
+          fallback={
+            <HeaderText white>Add your first transaction if you want see stats.</HeaderText>
+          }
+        >
+          <Suspense fallback={<h1>loading</h1>}>
+            {emptyTransactions === true ? (
+              <HeaderText white>Add your first transaction if you want see stats.</HeaderText>
+            ) : (
+              <>
+                <StyledHeaderText white>Your income vs expenses</StyledHeaderText>
+                <Doughnut data={bilans} options={options} />
+                <StyledHeaderText white>Type of your transactions</StyledHeaderText>
 
-            <Doughnut data={typeTransactions} options={options} />
-          </>
-        )}
+                <Doughnut data={typeTransactions} options={options} />
+              </>
+            )}
+          </Suspense>
+        </Suspense>
       </StyledWrapper>
     </>
   );

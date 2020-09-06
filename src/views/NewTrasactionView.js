@@ -60,7 +60,6 @@ const StyledInput = styled(Input)`
 
 const NewTrasactionView = ({ userId }) => {
   const [bilans, setBilans] = useState('');
-  // const [salary, setSalary] = useState();
 
   const genereteRandomID = () => {
     let text = '';
@@ -125,26 +124,24 @@ const NewTrasactionView = ({ userId }) => {
           if (montlyPayment === true) {
             let nextPaymentDate = new Date();
             nextPaymentDate.setDate(nextPaymentDate.getDate() + 30);
-            const fry = nextPaymentDate.toLocaleDateString();
+            const nextPaymentDateFormatting = nextPaymentDate.toLocaleDateString();
 
             db.collection('users')
               .doc(userId)
               .update({
                 transactions: firebase.firestore.FieldValue.arrayUnion(data),
-                nextPaymentDate: fry,
+                nextPaymentDate: nextPaymentDateFormatting,
               });
+            notify('payment');
           } else if (montlyPayment === false) {
             db.collection('users')
               .doc(userId)
               .update({
                 transactions: firebase.firestore.FieldValue.arrayUnion(data),
+                emptyTransactions: false,
               });
+            notify('success');
           }
-        }
-        if (paymentAdded === true) {
-          notify('payment');
-        } else {
-          notify('success');
         }
       })
       .catch(function (error) {
@@ -177,7 +174,6 @@ const NewTrasactionView = ({ userId }) => {
           if (doc.exists) {
             setBilans(doc.data().bilans);
             nextPaymentChecker(doc.data().nextPaymentDate, doc.data().salary);
-            // setSalary(doc.data().salary);
           } else {
             console.log('No such document!');
           }

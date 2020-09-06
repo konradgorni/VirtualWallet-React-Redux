@@ -1,6 +1,7 @@
+import * as constants from '../constants';
 export const userInfoAction = (email, uid) => {
   return {
-    type: 'ADD_INFO',
+    type: constants.ADD_INFO,
     email,
     uid,
   };
