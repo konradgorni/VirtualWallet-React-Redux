@@ -112,8 +112,25 @@ const TransactionPageView = ({ userID }) => {
         .get()
         .then(function (doc) {
           if (doc.exists) {
-            setTransactions(doc.data().transactions);
-            setBilans(doc.data().bilans);
+            const transactions = doc.data().transactions;
+            const salary = doc.data().salary;
+
+            let incomeCounter = 0;
+            let expensesCounter = 0;
+
+            transactions.map((transaction) => {
+              const cashSymbol = transaction.cash;
+              if (cashSymbol > 0) {
+                incomeCounter += cashSymbol;
+              } else if (cashSymbol < 0) {
+                expensesCounter += cashSymbol;
+              }
+
+              return null;
+            });
+
+            setTransactions(transactions);
+            setBilans(incomeCounter + expensesCounter + salary);
             setCurrency(doc.data().currency);
           } else {
             console.log('No such document!');

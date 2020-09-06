@@ -59,7 +59,6 @@ const UserSettingsView = ({ userId }) => {
 
   const budget = (salary) => {
     const docRef = db.collection('users').doc(userId);
-    const bilans = salary;
 
     docRef
       .get()
@@ -78,7 +77,6 @@ const UserSettingsView = ({ userId }) => {
           db.collection('users').doc(userId).set({
             salary,
             currency,
-            bilans,
             nextPaymentDate: fry,
           });
           return history.push('/authpagehome/stats');

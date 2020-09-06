@@ -60,8 +60,7 @@ const StyledInput = styled(Input)`
 
 const NewTrasactionView = ({ userId }) => {
   const [bilans, setBilans] = useState('');
-  const [NextPaymentDate, setDateNextPayment] = useState('');
-  const [sallary, setSallary] = useState();
+  // const [salary, setSalary] = useState();
 
   const genereteRandomID = () => {
     let text = '';
@@ -76,6 +75,16 @@ const NewTrasactionView = ({ userId }) => {
   const notify = (type) => {
     if (type === 'success') {
       toast.success('Transaction added!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (type === 'payment') {
+      toast.info('Montly Payment Added!', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -113,36 +122,37 @@ const NewTrasactionView = ({ userId }) => {
       .get()
       .then(function (doc) {
         if (doc.exists) {
-          db.collection('users')
-            .doc(userId)
-            .update({
-              transactions: firebase.firestore.FieldValue.arrayUnion(data),
-              bilans: bilans + cash,
-            });
           if (montlyPayment === true) {
             let nextPaymentDate = new Date();
             nextPaymentDate.setDate(nextPaymentDate.getDate() + 30);
             const fry = nextPaymentDate.toLocaleDateString();
-            db.collection('users').doc(userId).update({
-              nextPaymentDate: fry,
-            });
+
+            db.collection('users')
+              .doc(userId)
+              .update({
+                transactions: firebase.firestore.FieldValue.arrayUnion(data),
+                nextPaymentDate: fry,
+              });
+          } else if (montlyPayment === false) {
+            db.collection('users')
+              .doc(userId)
+              .update({
+                transactions: firebase.firestore.FieldValue.arrayUnion(data),
+              });
           }
-        } else {
-          db.collection('users')
-            .doc(userId)
-            .set({
-              transactions: [{ title, cash, date, type, id: genereteRandomID() }],
-              bilans: bilans + cash,
-            });
         }
-        notify('success');
+        if (paymentAdded === true) {
+          notify('payment');
+        } else {
+          notify('success');
+        }
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  const nextPaymentChecker = (payDate, sallary) => {
+  const nextPaymentChecker = (payDate, salary) => {
     let nextPaymentDate = new Date().toLocaleDateString();
     const currentDay = nextPaymentDate.substr(0, 1);
     const currentMonth = nextPaymentDate.substr(2, 2);
@@ -150,8 +160,10 @@ const NewTrasactionView = ({ userId }) => {
     const payDateDay = payDate.substr(0, 1);
     const payDateMonth = payDate.substr(2, 2);
 
+    const salaryy = salary * 1;
+
     if (currentDay === payDateDay && currentMonth === payDateMonth) {
-      add('Montly Payment', sallary, 'INCOME', true);
+      add('Montly Payment', salaryy, 'INCOME', true);
     }
   };
 
@@ -165,7 +177,7 @@ const NewTrasactionView = ({ userId }) => {
           if (doc.exists) {
             setBilans(doc.data().bilans);
             nextPaymentChecker(doc.data().nextPaymentDate, doc.data().salary);
-            setSallary(doc.data().sallary);
+            // setSalary(doc.data().salary);
           } else {
             console.log('No such document!');
           }
