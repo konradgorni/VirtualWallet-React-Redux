@@ -1,8 +1,6 @@
 # VirtualWallet
+DEMO https://konradgorni.github.io/VirtualWallet-React-Redux/
 
-
-## What is VirtualWallet
-
- *It is Your Virtual Wallet thanks to that you can see :
-  *Where you spend your money
- 
+test accont
+email test@wp.pl
+password Test123!@#
