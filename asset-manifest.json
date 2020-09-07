@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.js": "/login/static/js/main.3a5b4bad.chunk.js",
-    "main.js.map": "/login/static/js/main.3a5b4bad.chunk.js.map",
-    "runtime-main.js": "/login/static/js/runtime-main.bfe95ea0.js",
-    "runtime-main.js.map": "/login/static/js/runtime-main.bfe95ea0.js.map",
-    "static/css/2.87359af8.chunk.css": "/login/static/css/2.87359af8.chunk.css",
-    "static/js/2.9abfe866.chunk.js": "/login/static/js/2.9abfe866.chunk.js",
-    "static/js/2.9abfe866.chunk.js.map": "/login/static/js/2.9abfe866.chunk.js.map",
-    "index.html": "/login/index.html",
-    "precache-manifest.ea00d122d5c92e04cbd4333f232a8f25.js": "/login/precache-manifest.ea00d122d5c92e04cbd4333f232a8f25.js",
-    "service-worker.js": "/login/service-worker.js",
-    "static/css/2.87359af8.chunk.css.map": "/login/static/css/2.87359af8.chunk.css.map",
-    "static/js/2.9abfe866.chunk.js.LICENSE.txt": "/login/static/js/2.9abfe866.chunk.js.LICENSE.txt"
+    "main.js": "/konradgorni/VirtualWallet-React-Redux/static/js/main.b552db62.chunk.js",
+    "main.js.map": "/konradgorni/VirtualWallet-React-Redux/static/js/main.b552db62.chunk.js.map",
+    "runtime-main.js": "/konradgorni/VirtualWallet-React-Redux/static/js/runtime-main.45ded2fa.js",
+    "runtime-main.js.map": "/konradgorni/VirtualWallet-React-Redux/static/js/runtime-main.45ded2fa.js.map",
+    "static/css/2.87359af8.chunk.css": "/konradgorni/VirtualWallet-React-Redux/static/css/2.87359af8.chunk.css",
+    "static/js/2.d54325f9.chunk.js": "/konradgorni/VirtualWallet-React-Redux/static/js/2.d54325f9.chunk.js",
+    "static/js/2.d54325f9.chunk.js.map": "/konradgorni/VirtualWallet-React-Redux/static/js/2.d54325f9.chunk.js.map",
+    "index.html": "/konradgorni/VirtualWallet-React-Redux/index.html",
+    "precache-manifest.7bb5c13e20bfa2dabf0e68bb057dce02.js": "/konradgorni/VirtualWallet-React-Redux/precache-manifest.7bb5c13e20bfa2dabf0e68bb057dce02.js",
+    "service-worker.js": "/konradgorni/VirtualWallet-React-Redux/service-worker.js",
+    "static/css/2.87359af8.chunk.css.map": "/konradgorni/VirtualWallet-React-Redux/static/css/2.87359af8.chunk.css.map",
+    "static/js/2.d54325f9.chunk.js.LICENSE.txt": "/konradgorni/VirtualWallet-React-Redux/static/js/2.d54325f9.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.bfe95ea0.js",
+    "static/js/runtime-main.45ded2fa.js",
     "static/css/2.87359af8.chunk.css",
-    "static/js/2.9abfe866.chunk.js",
-    "static/js/main.3a5b4bad.chunk.js"
+    "static/js/2.d54325f9.chunk.js",
+    "static/js/main.b552db62.chunk.js"
   ]
 }
