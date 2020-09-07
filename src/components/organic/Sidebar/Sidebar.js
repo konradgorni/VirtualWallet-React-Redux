@@ -1,8 +1,6 @@
 import React from 'react';
 import { auth } from 'firebase/fire';
-import styled from 'styled-components';
 import { useHistory, Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faWallet,
   faHome,
@@ -11,37 +9,7 @@ import {
   faUsersCog,
   faPlusSquare,
 } from '@fortawesome/free-solid-svg-icons';
-import { device } from 'theme/breakpoints';
-
-const StyledWrapper = styled.div`
-  width: 15%;
-  /* width: 15vw; */
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: ${({ theme }) => theme.bgc};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5vh 0px;
-`;
-
-const StyledIcon = styled(FontAwesomeIcon)`
-  font-size: 55px;
-  transition: 0.5s ease-in-out;
-  @media ${device.tablet} {
-    font-size: 45px;
-  }
-  @media ${device.mobileM} {
-    font-size: 35px;
-  }
-
-  :hover {
-    color: ${({ theme }) => theme.color1};
-  }
-`;
+import { StyledWrapper, StyledIcon } from './Sidebar.css.js';
 
 const Sidebar = () => {
   const history = useHistory();

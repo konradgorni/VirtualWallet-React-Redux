@@ -1,59 +1,18 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import HeaderText from 'components/atoms/HeaderText';
 import Button from 'components/atoms/Button';
-import fire from '../firebase/fire';
-import { Formik, Form } from 'formik';
-import { Input, StyledErrorMessage } from 'components/atoms/FormikComponents';
+import fire from '../../firebase/fire';
+import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
-import { device } from 'theme/breakpoints';
+import {
+  StyledWrapper,
+  StyledContent,
+  StyledForm,
+  StyledIncorrectMessage,
+  StyledHeader,
+  StyledInput,
+  ErrorMessage,
+} from './RegisterPageView.css.js';
 
-const StyledWrapper = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-color: ${({ theme }) => theme.bgc};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const StyledContent = styled.div`
-  width: 40vw;
-  height: 60vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const StyledForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 45vh;
-
-  align-content: space-between;
-`;
-
-const StyledIncorrectMessage = styled.p`
-  color: red;
-  font-size: 20px;
-  text-decoration: underline;
-`;
-const StyledHeader = styled(HeaderText)`
-  @media ${device.mobileM} {
-    font-size: 40px;
-  }
-`;
-
-const StyledInput = styled(Input)`
-  @media ${device.mobileM} {
-    width: 250px;
-    margin: 0 auto;
-  }
-`;
-const ErrorMessage = styled(StyledErrorMessage)`
-  @media ${device.mobileM} {
-    margin: 0 auto;
-  }
-`;
 const strongRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
 const RegisterPageView = () => {
   const [hide, setHide] = useState(false);

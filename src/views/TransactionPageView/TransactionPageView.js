@@ -1,78 +1,23 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { db } from 'firebase/fire';
-import styled from 'styled-components';
-import Sidebar from 'components/organic/Sidebar';
 import { connect } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWallet, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
-import HeaderText from 'components/atoms/HeaderText';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import styled from 'styled-components';
 import { device } from 'theme/breakpoints';
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import {
+  StyledWrapper,
+  StyledHeader,
+  StyledIcon,
+  StyledTableWrapper,
+  StyledHeaderTitle,
+  StyledNav,
+  StyledBootstrapTable,
+  SearchWrapper,
+} from './TransactionPageView.css.js';
 
-const StyledWrapper = styled.div`
-  width: 85vw;
-  min-height: 100vh;
-  margin-left: 15vw;
-  background-color: ${({ theme }) => theme.color2};
-  padding: 1%;
-  overflow-x: hidden;
-  @media ${device.tablet} {
-    padding: 0;
-  }
-`;
-
-const StyledHeader = styled.div`
-  width: 100%;
-  height: 15vh;
-  display: flex;
-  justify-content: space-between;
-
-  div {
-    display: flex;
-    align-items: center;
-
-    p {
-      display: block;
-      height: 30px;
-      line-height: 30px;
-      margin: 0;
-      padding: 0;
-    }
-  }
-`;
-
-const StyledIcon = styled(FontAwesomeIcon)`
-  transition: 0.5s ease-in-out;
-  display: block;
-  height: 30px;
-`;
-
-const StyledTableWrapper = styled.div`
-  width: 100%;
-  height: auto;
-`;
-const StyledHeaderTitle = styled(HeaderText)`
-  text-align: center;
-  color: white;
-  font-size: 45px;
-  @media ${device.mobileL} {
-    font-size: 40px;
-  }
-`;
-const StyledNav = styled.div`
-  width: 100%;
-  height: 20vh;
-  display: flex;
-  justify-content: center;
-`;
-const StyledBootstrapTable = styled(BootstrapTable)`
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`;
 const getData = () => {
   let today = new Date().toLocaleDateString();
   return today;
@@ -80,7 +25,6 @@ const getData = () => {
 
 const TransactionPageView = ({ userID }) => {
   const [transactions, setTransactions] = useState();
-
   const [bilans, setBilans] = useState(0);
   const [currency, setCurrency] = useState(0);
 
@@ -93,14 +37,6 @@ const TransactionPageView = ({ userID }) => {
     }
   `;
 
-  const SearchWrapper = styled.div`
-    width: 100%;
-    height: 10vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  `;
   const products = [];
 
   const data = useRef(getData());
@@ -197,7 +133,6 @@ const TransactionPageView = ({ userID }) => {
 
   return (
     <>
-      <Sidebar />
       <StyledWrapper>
         <StyledHeader>
           <div>

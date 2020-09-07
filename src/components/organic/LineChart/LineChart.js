@@ -1,38 +1,21 @@
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { db } from 'firebase/fire';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 import HeaderText from 'components/atoms/HeaderText';
-import { device } from 'theme/breakpoints';
+import { StyledWrapper, StyledHeaderText } from './LineChart.css';
 
 const LineChart = ({ userID }) => {
-  const [types, setTypes] = useState();
+  const [types, setTypes] = useState({});
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
-  const [emptyTransactions, setEmptyTransactions] = useState();
+  const [emptyTransactions, setEmptyTransactions] = useState(true);
+  const [Loader, setLoader] = useState(true);
+  const [isLoadingVisible, setIsLoadingVisible] = useState(false);
 
-  const StyledWrapper = styled.div`
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  `;
-  const StyledHeaderText = styled(HeaderText)`
-    text-align: center;
-    padding: 5% 0;
-    @media ${device.laptop} {
-      font-size: 35px;
-    }
-    @media ${device.tablet} {
-      font-size: 32px;
-    }
-  `;
-  const idUser = userID;
   useEffect(() => {
-    if (idUser != null) {
-      const docRef = db.collection('users').doc(idUser);
+    if (userID != null) {
+      const docRef = db.collection('users').doc(userID);
       docRef
         .get()
         .then(function (doc) {
@@ -41,6 +24,7 @@ const LineChart = ({ userID }) => {
             const empty = doc.data().emptyTransactions;
             if (empty !== undefined) {
               setEmptyTransactions(doc.data().emptyTransactions);
+              setLoader(false);
             }
 
             const transactionsType = {
@@ -84,11 +68,11 @@ const LineChart = ({ userID }) => {
           console.error(error);
         });
     }
-  }, [idUser]);
+  }, [userID]);
   const labelsList = [];
   const typesTransactions = [];
   if (types !== []) {
-    for (var key in types) {
+    for (let key in types) {
       labelsList.push(key);
     }
     for (let k in types) {
@@ -129,28 +113,35 @@ const LineChart = ({ userID }) => {
     },
   };
 
+  const Spiner = () => {
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        setIsLoadingVisible(true);
+      }, 500);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }, []);
+
+    return isLoadingVisible ? <p>loading</p> : null;
+  };
+
   return (
     <>
       <StyledWrapper>
-        <Suspense
-          fallback={
-            <HeaderText white>Add your first transaction if you want see stats.</HeaderText>
-          }
-        >
-          <Suspense fallback={<h1>loading</h1>}>
-            {emptyTransactions === true ? (
-              <HeaderText white>Add your first transaction if you want see stats.</HeaderText>
-            ) : (
-              <>
-                <StyledHeaderText white>Your income vs expenses</StyledHeaderText>
-                <Doughnut data={bilans} options={options} />
-                <StyledHeaderText white>Type of your transactions</StyledHeaderText>
+        {Loader ? (
+          <Spiner />
+        ) : emptyTransactions ? (
+          <HeaderText white>Add your first transaction if you want see stats.</HeaderText>
+        ) : (
+          <>
+            <StyledHeaderText white>Your income vs expenses</StyledHeaderText>
+            <Doughnut data={bilans} options={options} />
+            <StyledHeaderText white>Type of your transactions</StyledHeaderText>
 
-                <Doughnut data={typeTransactions} options={options} />
-              </>
-            )}
-          </Suspense>
-        </Suspense>
+            <Doughnut data={typeTransactions} options={options} />
+          </>
+        )}
       </StyledWrapper>
     </>
   );

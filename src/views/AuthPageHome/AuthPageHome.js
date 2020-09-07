@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import Sidebar from 'components/organic/Sidebar';
+import Sidebar from 'components/organic/Sidebar/Sidebar';
 import { Switch, Route } from 'react-router-dom';
-import TransactionPageView from 'views/TransactionPageView';
-import NewTrasactionView from 'views/NewTrasactionView';
-import StatisticPageView from 'views/StatisticPageView';
-import UserSettingsView from 'views/UserSettingsView';
+import TransactionPageView from 'views/TransactionPageView/TransactionPageView';
+import NewTrasactionView from 'views/NewTransactionView/NewTransactionView';
+import StatisticPageView from 'views/StatisticPageView/StatisticPageView';
+import UserSettingsView from 'views/UserSettingsView/UserSettingsView';
 import { auth } from 'firebase/fire';
 import { userInfoAction } from 'data/actions/userInfo';
 import { connect } from 'react-redux';

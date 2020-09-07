@@ -1,57 +1,17 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Formik, Form } from 'formik';
+import { Formik } from 'formik';
 import { connect } from 'react-redux';
 import { db } from 'firebase/fire';
 import { useHistory } from 'react-router-dom';
-import HeaderText from 'components/atoms/HeaderText';
-import { Input, StyledErrorMessage } from 'components/atoms/FormikComponents';
-import Button from 'components/atoms/Button';
-import { device } from 'theme/breakpoints';
-
-const StyledWrapper = styled.div`
-  width: 85vw;
-  height: 100vh;
-  margin-left: 15vw;
-  background-color: ${({ theme }) => theme.color2};
-`;
-
-const StyledForm = styled(Form)`
-  display: flex;
-  height: 35vh;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const StyledSelect = styled.select`
-  width: 300px;
-  height: 60px;
-  @media ${device.mobileS} {
-    width: 100%;
-  }
-`;
-
-const StyledHeader = styled(HeaderText)`
-  text-align: center;
-  padding: 5% 0;
-  color: white;
-  @media ${device.mobileS} {
-    font-size: 35px;
-  }
-`;
-
-const StyledButton = styled(Button)`
-  @media ${device.mobileS} {
-    width: 100%;
-  }
-`;
-
-const StyledInput = styled(Input)`
-  @media ${device.mobileS} {
-    width: 100%;
-  }
-`;
+import { StyledErrorMessage } from 'components/atoms/FormikComponents';
+import {
+  StyledWrapper,
+  StyledForm,
+  StyledSelect,
+  StyledHeader,
+  StyledButton,
+  StyledInput,
+} from './UserSettingsView.css.js';
 
 const UserSettingsView = ({ userId }) => {
   const [currency, setCurrency] = useState('PLN');

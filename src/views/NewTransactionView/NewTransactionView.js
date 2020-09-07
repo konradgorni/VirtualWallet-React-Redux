@@ -1,66 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Sidebar from 'components/organic/Sidebar';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import { db } from 'firebase/fire';
-import { Formik, Form, Field } from 'formik';
-import { Input, StyledErrorMessage } from 'components/atoms/FormikComponents';
-import Button from 'components/atoms/Button';
-import HeaderText from 'components/atoms/HeaderText';
+import { Formik, Field } from 'formik';
+import { StyledErrorMessage } from 'components/atoms/FormikComponents';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { device } from 'theme/breakpoints';
-
-const StyledWrapper = styled.div`
-  width: 85vw;
-  height: 100vh;
-  margin-left: 15vw;
-  background-color: ${({ theme }) => theme.color2};
-  overflow-x: hidden;
-`;
-
-const StyledForm = styled(Form)`
-  display: flex;
-  height: 35vh;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const StyledSelect = styled.select`
-  width: 300px;
-  height: 60px;
-  @media ${device.mobileS} {
-    width: 100%;
-  }
-`;
-const StyledHeader = styled(HeaderText)`
-  text-align: center;
-  padding: 5% 0;
-  color: white;
-  @media ${device.mobileS} {
-    font-size: 35px;
-  }
-  @media ${device.mobileM} {
-    font-size: 35px;
-  }
-`;
-const StyledButton = styled(Button)`
-  @media ${device.mobileS} {
-    width: 100%;
-  }
-`;
-
-const StyledInput = styled(Input)`
-  @media ${device.mobileS} {
-    width: 100%;
-  }
-`;
+import {
+  StyledWrapper,
+  StyledForm,
+  StyledSelect,
+  StyledHeader,
+  StyledButton,
+  StyledInput,
+} from './NewTransactionView.css';
 
 const NewTrasactionView = ({ userId }) => {
-  const [bilans, setBilans] = useState('');
-
   const genereteRandomID = () => {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -172,7 +127,6 @@ const NewTrasactionView = ({ userId }) => {
         .get()
         .then(function (doc) {
           if (doc.exists) {
-            setBilans(doc.data().bilans);
             nextPaymentChecker(doc.data().nextPaymentDate, doc.data().salary);
           } else {
             console.log('No such document!');
@@ -186,7 +140,6 @@ const NewTrasactionView = ({ userId }) => {
 
   return (
     <>
-      <Sidebar />
       <StyledWrapper>
         <StyledHeader>Add new transaction</StyledHeader>
         <Formik

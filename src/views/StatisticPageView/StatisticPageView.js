@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import LineChart from 'components/organic/LineChart';
+import LineChart from 'components/organic/LineChart/LineChart';
+import { StyledWrapper, StyledText } from './StatisticPageView.css';
 
 const StatisticPageView = ({ userID }) => {
   const [width, setWidth] = useState(true);
@@ -11,19 +11,6 @@ const StatisticPageView = ({ userID }) => {
   }, []);
 
   window.addEventListener('resize', () => setWidth(window.innerWidth));
-
-  const StyledWrapper = styled.div`
-    width: 85%;
-    min-height: 100vh;
-    margin-left: 15%;
-    background-color: ${({ theme }) => theme.color2};
-  `;
-  const StyledText = styled.p`
-    font-size: 45px;
-    color: white;
-    text-align: center;
-    font-weight: bold;
-  `;
 
   return (
     <>
