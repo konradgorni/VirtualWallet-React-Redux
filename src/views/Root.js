@@ -11,7 +11,7 @@ import PrivateRoute from 'views/PrivateRoute';
 
 const Root = () => {
   return (
-    <Router>
+    <Router basename="/">
       <div>
         <GlobalStyle />
         <ThemeProvider theme={theme}>
