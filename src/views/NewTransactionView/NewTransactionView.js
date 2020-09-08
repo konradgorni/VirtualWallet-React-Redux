@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import { db } from 'firebase/fire';
 import { Formik, Field } from 'formik';
 import { StyledErrorMessage } from 'components/atoms/FormikComponents';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   StyledWrapper,
@@ -14,6 +14,7 @@ import {
   StyledButton,
   StyledInput,
 } from './NewTransactionView.css';
+import { notify } from 'components/utils/notify';
 
 const NewTrasactionView = ({ userId }) => {
   const genereteRandomID = () => {
@@ -26,43 +27,9 @@ const NewTrasactionView = ({ userId }) => {
     return text;
   };
 
-  const notify = (type) => {
-    if (type === 'success') {
-      toast.success('Transaction added!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else if (type === 'payment') {
-      toast.info('Montly Payment Added!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else {
-      toast.error('Something went wrong :<', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
-  };
-
-  const add = (title, cash, type, paymentAdded) => {
+  const addNewTransaction = (title, cash, type, paymentAdded) => {
     const docRef = db.collection('users').doc(userId);
-    let montlyPayment = paymentAdded;
+
     const date = new Date().toLocaleDateString();
     const data = {
       title,
@@ -76,7 +43,7 @@ const NewTrasactionView = ({ userId }) => {
       .get()
       .then(function (doc) {
         if (doc.exists) {
-          if (montlyPayment === true) {
+          if (paymentAdded === true) {
             let nextPaymentDate = new Date();
             nextPaymentDate.setDate(nextPaymentDate.getDate() + 30);
             const nextPaymentDateFormatting = nextPaymentDate.toLocaleDateString();
@@ -88,7 +55,7 @@ const NewTrasactionView = ({ userId }) => {
                 nextPaymentDate: nextPaymentDateFormatting,
               });
             notify('payment');
-          } else if (montlyPayment === false) {
+          } else if (paymentAdded === false) {
             db.collection('users')
               .doc(userId)
               .update({
@@ -115,7 +82,7 @@ const NewTrasactionView = ({ userId }) => {
     const salaryy = salary * 1;
 
     if (currentDay === payDateDay && currentMonth === payDateMonth) {
-      add('Montly Payment', salaryy, 'INCOME', true);
+      addNewTransaction('Montly Payment', salaryy, 'INCOME', true);
     }
   };
 
@@ -159,7 +126,7 @@ const NewTrasactionView = ({ userId }) => {
           }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             console.log(values);
-            add(values.title, values.cash, values.type, false);
+            addNewTransaction(values.title, values.cash, values.type, false);
             resetForm({ title: '', cash: 0, type: '' });
             setSubmitting(false);
           }}
@@ -179,7 +146,7 @@ const NewTrasactionView = ({ userId }) => {
                 <option value="UNEXPECTED">UNEXPECTED EXPENSES</option>
                 <option value="OTHER">OTHER</option>
               </Field>
-              <StyledButton onClick={add} type="submit">
+              <StyledButton onClick={addNewTransaction} type="submit">
                 Add
               </StyledButton>
               <ToastContainer />

@@ -15,21 +15,21 @@ import {
 
 const UserSettingsView = ({ userId }) => {
   const [currency, setCurrency] = useState('PLN');
-  let history = useHistory();
+  const history = useHistory();
 
   const budget = (salary) => {
     const docRef = db.collection('users').doc(userId);
 
     docRef
       .get()
-      .then(function (doc) {
-        let nextPaymentDate = new Date();
+      .then((doc) => {
+        const nextPaymentDate = new Date();
         nextPaymentDate.setDate(nextPaymentDate.getDate() + 30);
         const nextPaymentDateFormatting = nextPaymentDate.toLocaleDateString();
         if (doc.exists) {
           db.collection('users').doc(userId).update({
-            salary: salary,
-            currency: currency,
+            salary,
+            currency,
             nextPaymentDate: nextPaymentDateFormatting,
           });
           return history.push('/authpagehome/stats');
@@ -43,6 +43,27 @@ const UserSettingsView = ({ userId }) => {
           return history.push('/authpagehome/stats');
         }
       })
+      // .then(function (doc) {
+      //   const nextPaymentDate = new Date();
+      //   nextPaymentDate.setDate(nextPaymentDate.getDate() + 30);
+      //   const nextPaymentDateFormatting = nextPaymentDate.toLocaleDateString();
+      //   if (doc.exists) {
+      //     db.collection('users').doc(userId).update({
+      //       salary,
+      //       currency,
+      //       nextPaymentDate: nextPaymentDateFormatting,
+      //     });
+      //     return history.push('/authpagehome/stats');
+      //   } else {
+      //     db.collection('users').doc(userId).set({
+      //       salary,
+      //       currency,
+      //       nextPaymentDate: nextPaymentDateFormatting,
+      //       emptyTransactions: true,
+      //     });
+      //     return history.push('/authpagehome/stats');
+      //   }
+      // })
       .catch(function (error) {
         console.log('Error getting document:', error);
       });

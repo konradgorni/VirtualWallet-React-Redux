@@ -13,9 +13,11 @@ import {
   ErrorMessage,
 } from './RegisterPageView.css.js';
 
-const strongRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
+const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
+const emailRegex = new RegExp('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,}$/i');
+
 const RegisterPageView = () => {
-  const [hide, setHide] = useState(false);
+  const [isErrorMessageVisible, setIsErrorMessageVisible] = useState(false);
   let history = useHistory();
 
   const singup = (email, password) => {
@@ -27,9 +29,9 @@ const RegisterPageView = () => {
       })
       .catch((err) => {
         console.log(err);
-        setHide(true);
+        setIsErrorMessageVisible(true);
         setTimeout(() => {
-          setHide(false);
+          setIsErrorMessageVisible(false);
         }, 4000);
       });
   };
@@ -44,12 +46,12 @@ const RegisterPageView = () => {
             const errors = {};
             if (!values.email) {
               errors.email = 'Required';
-            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+            } else if (!emailRegex.test(values.email)) {
               errors.email = 'Invalid email address';
             }
             if (!values.password) {
               errors.password = 'Required';
-            } else if (!strongRegex.test(values.password)) {
+            } else if (!passwordRegex.test(values.password)) {
               errors.password =
                 'Minimum eight characters, at least one letter, one number and one special character:';
             }
@@ -70,7 +72,7 @@ const RegisterPageView = () => {
         >
           {({ isSubmitting }) => (
             <StyledForm>
-              {hide ? (
+              {isErrorMessageVisible ? (
                 <StyledIncorrectMessage>
                   Email or Password is invalid.Try again
                 </StyledIncorrectMessage>

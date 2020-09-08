@@ -16,8 +16,8 @@ import {
 } from './LoginPageView.css';
 
 const LoginPageView = ({ changeAuth }) => {
-  const [hide, setHide] = useState(false);
-  let history = useHistory();
+  const [isHide, setIsHide] = useState(false);
+  const history = useHistory();
 
   const login = (email, password) => {
     auth
@@ -27,9 +27,9 @@ const LoginPageView = ({ changeAuth }) => {
         return history.push('/authpagehome/stats');
       })
       .catch((err) => {
-        setHide(true);
+        setIsHide(true);
         setTimeout(() => {
-          setHide(false);
+          setIsHide(false);
         }, 4000);
       });
   };
@@ -42,10 +42,9 @@ const LoginPageView = ({ changeAuth }) => {
           initialValues={{ email: '', password: '' }}
           validate={(values) => {
             const errors = {};
-            const regexEmail = '!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,}$/i';
             if (!values.email) {
               errors.email = 'Required';
-            } else if (regexEmail.test(values.email)) {
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,}$/i.test(values.email)) {
               errors.email = 'Invalid email address';
             }
             if (!values.password) {
@@ -61,7 +60,7 @@ const LoginPageView = ({ changeAuth }) => {
         >
           {({ isSubmitting }) => (
             <StyledForm>
-              {hide ? (
+              {isHide ? (
                 <StyledIncorrectMessage>
                   Email or Password is invalid.Try again
                 </StyledIncorrectMessage>

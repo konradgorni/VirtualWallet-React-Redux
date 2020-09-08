@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { faWallet, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import styled from 'styled-components';
-import { device } from 'theme/breakpoints';
-import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+
 import {
   StyledWrapper,
   StyledHeader,
@@ -16,7 +15,9 @@ import {
   StyledNav,
   StyledBootstrapTable,
   SearchWrapper,
+  StyledSearch,
 } from './TransactionPageView.css.js';
+import { columns } from 'data/columnBoostrapTable';
 
 const getData = () => {
   let today = new Date().toLocaleDateString();
@@ -27,17 +28,7 @@ const TransactionPageView = ({ userID }) => {
   const [transactions, setTransactions] = useState();
   const [bilans, setBilans] = useState(0);
   const [currency, setCurrency] = useState(0);
-
-  const { SearchBar } = Search;
-  const StyledSearch = styled(SearchBar)`
-    width: 350px;
-    height: 80px;
-    @media ${device.mobileX} {
-      width: 85vw;
-    }
-  `;
-
-  const products = [];
+  const [products, setProducts] = useState([]);
 
   const data = useRef(getData());
   const idUser = userID;
@@ -77,57 +68,12 @@ const TransactionPageView = ({ userID }) => {
         });
     }
   }, [idUser]);
-  const columns = [
-    {
-      dataField: 'id',
-      text: 'ID',
-      style: {
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-      },
-    },
-    {
-      dataField: 'title',
-      text: 'Title',
-      style: {
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-      },
-    },
-    {
-      dataField: 'cash',
-      text: 'Money',
-      style: {
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-      },
-    },
-    {
-      dataField: 'type',
-      text: 'Type',
-      style: {
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-      },
-    },
-    {
-      dataField: 'date',
-      text: 'Date',
-      style: {
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-      },
-    },
-  ];
 
   {
     if (transactions) {
-      transactions.reverse().map((transaction) => products.push(transaction));
+      transactions
+        .reverse()
+        .map((transaction) => setProducts((prevArray) => [...prevArray, transaction]));
     }
   }
 
@@ -149,7 +95,7 @@ const TransactionPageView = ({ userID }) => {
           </div>
         </StyledHeader>
         <StyledNav>
-          <StyledHeaderTitle white>Last transactions</StyledHeaderTitle>
+          <StyledHeaderTitle white>Last ons</StyledHeaderTitle>
         </StyledNav>
         <StyledTableWrapper>
           <ToolkitProvider keyField="id" data={products} columns={columns} search>

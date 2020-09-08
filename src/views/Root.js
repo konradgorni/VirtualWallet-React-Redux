@@ -7,7 +7,7 @@ import HomePageView from 'views/HomePageView/HomePageView';
 import RegisterPageView from 'views/RegisterPageView/RegisterPageView';
 import LoginPageView from 'views/LoginPageView/LoginPageView';
 import AuthPageHome from 'views/AuthPageHome/AuthPageHome';
-import PrivateRoute from 'views/PrivateRoute';
+import PrivateRoute from 'security/PrivateRoute';
 
 const Root = () => {
   return (

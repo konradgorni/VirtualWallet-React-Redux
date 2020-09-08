@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HeaderText from 'components/atoms/HeaderText';
 import { device } from 'theme/breakpoints';
 import BootstrapTable from 'react-bootstrap-table-next';
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 
 export const StyledWrapper = styled.div`
   width: 85vw;
@@ -73,4 +74,13 @@ export const SearchWrapper = styled.div`
   justify-content: center;
   align-items: center;
   overflow: hidden;
+`;
+
+export const { SearchBar } = Search;
+export const StyledSearch = styled(SearchBar)`
+  width: 350px;
+  height: 80px;
+  @media ${device.mobileX} {
+    width: 85vw;
+  }
 `;

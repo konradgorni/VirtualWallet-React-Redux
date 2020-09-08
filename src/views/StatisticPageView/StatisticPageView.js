@@ -8,9 +8,8 @@ const StatisticPageView = ({ userID }) => {
 
   useEffect(() => {
     setWidth(window.innerWidth);
+    window.addEventListener('resize', () => setWidth(window.innerWidth));
   }, []);
-
-  window.addEventListener('resize', () => setWidth(window.innerWidth));
 
   return (
     <>
