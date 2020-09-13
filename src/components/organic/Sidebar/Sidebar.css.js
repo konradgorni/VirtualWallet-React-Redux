@@ -4,7 +4,6 @@ import { device } from 'theme/breakpoints';
 
 export const StyledWrapper = styled.div`
   width: 15%;
-
   height: 100vh;
   position: fixed;
   top: 0;

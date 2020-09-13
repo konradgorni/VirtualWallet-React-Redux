@@ -1,5 +1,6 @@
 import React from 'react';
 import { auth } from 'firebase/fire';
+import { withRouter } from 'react-router-dom';
 import { useHistory, Link } from 'react-router-dom';
 import {
   faWallet,
@@ -17,6 +18,7 @@ const Sidebar = () => {
     auth.signOut();
     return history.push('/');
   };
+
   return (
     <>
       <StyledWrapper>
@@ -35,7 +37,9 @@ const Sidebar = () => {
         </Link>
 
         <div>
-          <StyledIcon onClick={singout} icon={faSignOutAlt} size="3x" color="#f69e7b" />
+          <Link>
+            <StyledIcon onClick={singout} icon={faSignOutAlt} size="3x" color="#f69e7b" />
+          </Link>
         </div>
       </StyledWrapper>
     </>

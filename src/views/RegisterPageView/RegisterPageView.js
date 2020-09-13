@@ -14,7 +14,6 @@ import {
 } from './RegisterPageView.css.js';
 
 const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})');
-const emailRegex = new RegExp('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,}$/i');
 
 const RegisterPageView = () => {
   const [isErrorMessageVisible, setIsErrorMessageVisible] = useState(false);
@@ -25,7 +24,7 @@ const RegisterPageView = () => {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((u) => {
-        return history.push('/authpagehome/settings');
+        return history.push('/authpagehome/firstuserwallet');
       })
       .catch((err) => {
         console.log(err);
@@ -46,7 +45,7 @@ const RegisterPageView = () => {
             const errors = {};
             if (!values.email) {
               errors.email = 'Required';
-            } else if (!emailRegex.test(values.email)) {
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,}$/i.test(values.email)) {
               errors.email = 'Invalid email address';
             }
             if (!values.password) {

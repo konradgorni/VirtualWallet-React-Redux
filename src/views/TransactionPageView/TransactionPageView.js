@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { faWallet, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+import { fireStoreFetch } from 'components/utils/fireStoreFetch';
 
 import {
   StyledWrapper,
@@ -25,57 +26,37 @@ const getData = () => {
 };
 
 const TransactionPageView = ({ userID }) => {
-  const [transactions, setTransactions] = useState();
+  const [transactionsList, setTransactionsList] = useState();
   const [bilans, setBilans] = useState(0);
   const [currency, setCurrency] = useState(0);
-  const [products, setProducts] = useState([]);
 
   const data = useRef(getData());
-  const idUser = userID;
   useEffect(() => {
-    if (idUser != null) {
-      const docRef = db.collection('users').doc(idUser);
-      docRef
-        .get()
-        .then(function (doc) {
-          if (doc.exists) {
-            const transactions = doc.data().transactions;
-            const salary = doc.data().salary;
+    if (userID != null) {
+      fireStoreFetch(userID).then((response) => {
+        const transactions = response.transactions;
+        const salary = response.salary;
 
-            let incomeCounter = 0;
-            let expensesCounter = 0;
+        let incomeCounter = 0;
+        let expensesCounter = 0;
 
-            transactions.map((transaction) => {
-              const cashSymbol = transaction.cash;
-              if (cashSymbol > 0) {
-                incomeCounter += cashSymbol;
-              } else if (cashSymbol < 0) {
-                expensesCounter += cashSymbol;
-              }
-
-              return null;
-            }, []);
-
-            setTransactions(transactions);
-            setBilans(incomeCounter + expensesCounter + salary);
-            setCurrency(doc.data().currency);
-          } else {
-            console.log('No such document!');
+        transactions.map((transaction) => {
+          const cashSymbol = transaction.cash;
+          if (cashSymbol > 0) {
+            incomeCounter += cashSymbol;
+          } else if (cashSymbol < 0) {
+            expensesCounter += cashSymbol;
           }
-        })
-        .catch(function (error) {
-          console.log('Error getting document:', error);
-        });
-    }
-  }, [idUser]);
 
-  {
-    if (transactions) {
-      transactions
-        .reverse()
-        .map((transaction) => setProducts((prevArray) => [...prevArray, transaction]));
+          return null;
+        });
+
+        setTransactionsList(transactions.reverse().slice(0, 5));
+        setBilans(incomeCounter + expensesCounter + salary);
+        setCurrency(response.currency);
+      });
     }
-  }
+  }, [userID]);
 
   return (
     <>
@@ -95,22 +76,28 @@ const TransactionPageView = ({ userID }) => {
           </div>
         </StyledHeader>
         <StyledNav>
-          <StyledHeaderTitle white>Last ons</StyledHeaderTitle>
+          <StyledHeaderTitle white>Last transactions</StyledHeaderTitle>
         </StyledNav>
         <StyledTableWrapper>
-          <ToolkitProvider keyField="id" data={products} columns={columns} search>
-            {(props) => (
-              <>
-                <SearchWrapper>
-                  {' '}
-                  <StyledSearch placeholder="Title transaction" {...props.searchProps} />
-                </SearchWrapper>
+          {transactionsList ? (
+            <ToolkitProvider keyField="id" data={transactionsList} columns={columns} search>
+              {(props) => (
+                <>
+                  <SearchWrapper>
+                    {' '}
+                    <StyledSearch placeholder="Title transaction" {...props.searchProps} />
+                  </SearchWrapper>
 
-                <hr />
-                <StyledBootstrapTable {...props.baseProps} />
-              </>
-            )}
-          </ToolkitProvider>
+                  <hr />
+
+                  <StyledBootstrapTable {...props.baseProps} />
+                  {transactionsList.length === 0 ? <p>Add first transaction</p> : null}
+                </>
+              )}
+            </ToolkitProvider>
+          ) : (
+            <p>Loading...</p>
+          )}
         </StyledTableWrapper>
       </StyledWrapper>
     </>

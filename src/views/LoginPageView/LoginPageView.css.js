@@ -15,11 +15,18 @@ export const StyledWrapper = styled.div`
 `;
 export const StyledContent = styled.div`
   width: 50%;
-  height: 35vh;
+  height: 45vh;
   margin: 0px auto;
   justify-content: space-around;
   align-items: center;
   display: flex;
+
+  @media ${device.laptopL} {
+    width: 80%;
+  }
+  @media ${device.laptopL} {
+    width: 100%;
+  }
   @media ${device.tablet} {
     flex-direction: column;
   }
@@ -30,6 +37,12 @@ export const StyledForm = styled(Form)`
   justify-content: space-between;
   height: 25vh;
   align-content: space-between;
+  @media ${device.mobileM} {
+    height: 30vh;
+  }
+  @media ${device.mobileS} {
+    height: 35vh;
+  }
 `;
 
 export const StyledInput = styled(Input)`

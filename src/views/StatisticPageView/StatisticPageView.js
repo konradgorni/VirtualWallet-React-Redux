@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import LineChart from 'components/organic/LineChart/LineChart';
 import { StyledWrapper, StyledText } from './StatisticPageView.css';
 
-const StatisticPageView = ({ userID }) => {
-  const [width, setWidth] = useState(true);
+const StatisticPageView = () => {
+  const [width, setWidth] = useState();
 
   useEffect(() => {
     setWidth(window.innerWidth);
-    window.addEventListener('resize', () => setWidth(window.innerWidth));
+
+    function cb() {
+      setWidth(window.innerWidth);
+    }
+
+    window.addEventListener('resize', cb);
+    return () => window.removeEventListener('resize', cb);
   }, []);
 
   return (
@@ -24,10 +29,6 @@ const StatisticPageView = ({ userID }) => {
       </StyledWrapper>
     </>
   );
-};
-
-StatisticPageView.propTypes = {
-  userID: PropTypes.string.isRequired,
 };
 
 export default StatisticPageView;

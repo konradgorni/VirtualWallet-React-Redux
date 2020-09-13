@@ -16,7 +16,7 @@ import {
 } from './LoginPageView.css';
 
 const LoginPageView = ({ changeAuth }) => {
-  const [isHide, setIsHide] = useState(false);
+  const [isHide, setHide] = useState(false);
   const history = useHistory();
 
   const login = (email, password) => {
@@ -27,9 +27,9 @@ const LoginPageView = ({ changeAuth }) => {
         return history.push('/authpagehome/stats');
       })
       .catch((err) => {
-        setIsHide(true);
+        setHide(true);
         setTimeout(() => {
-          setIsHide(false);
+          setHide(false);
         }, 4000);
       });
   };

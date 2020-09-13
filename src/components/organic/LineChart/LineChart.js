@@ -4,6 +4,8 @@ import { db } from 'firebase/fire';
 import { connect } from 'react-redux';
 import HeaderText from 'components/atoms/HeaderText';
 import { StyledWrapper, StyledHeaderText } from './LineChart.css';
+import { Spiner } from 'components/utils/Spiner';
+import { fireStoreFetch } from 'components/utils/fireStoreFetch';
 
 const LineChart = ({ userID }) => {
   const [types, setTypes] = useState({});
@@ -14,61 +16,54 @@ const LineChart = ({ userID }) => {
   const [isLoadingVisible, setIsLoadingVisible] = useState(false);
 
   useEffect(() => {
-    if (userID != null) {
-      const docRef = db.collection('users').doc(userID);
-      docRef
-        .get()
-        .then(function (doc) {
-          if (doc.exists) {
-            const transactions = doc.data().transactions;
-            const empty = doc.data().emptyTransactions;
-            if (empty !== undefined) {
-              setEmptyTransactions(doc.data().emptyTransactions);
-              setLoader(false);
+    if (userID !== null) {
+      fireStoreFetch(userID).then((response) => {
+        const transactions = response.transactions;
+        const empty = response.emptyTransactions;
+
+        if (empty !== undefined) {
+          setEmptyTransactions(response.emptyTransactions);
+          setLoader(false);
+        }
+        if (empty === false) {
+          const transactionsType = {
+            INCOME: 0,
+            BILLS: 0,
+            FOOD: 0,
+            OTHER: 0,
+            CAR: 0,
+            UNEXPECTED: 0,
+            ENTERTAINMENT: 0,
+          };
+
+          transactions.map((transaction) => {
+            const typeTr = transaction.type;
+            transactionsType[typeTr] += +1;
+            return null;
+          });
+
+          let incomeCounter = 0;
+          let expensesCounter = 0;
+
+          transactions.map((transaction) => {
+            const cashSymbol = transaction.cash;
+            if (cashSymbol > 0) {
+              incomeCounter += cashSymbol;
+            } else if (cashSymbol < 0) {
+              expensesCounter += cashSymbol;
             }
 
-            const transactionsType = {
-              INCOME: 0,
-              BILLS: 0,
-              FOOD: 0,
-              OTHER: 0,
-              CAR: 0,
-              UNEXPECTED: 0,
-              ENTERTAINMENT: 0,
-            };
+            return null;
+          });
+          setExpenses(expensesCounter);
+          setIncome(incomeCounter);
 
-            transactions.map((transaction) => {
-              const typeTr = transaction.type;
-              transactionsType[typeTr] += +1;
-              return null;
-            });
-
-            let incomeCounter = 0;
-            let expensesCounter = 0;
-
-            transactions.map((transaction) => {
-              const cashSymbol = transaction.cash;
-              if (cashSymbol > 0) {
-                incomeCounter += cashSymbol;
-              } else if (cashSymbol < 0) {
-                expensesCounter += cashSymbol;
-              }
-
-              return null;
-            });
-            setExpenses(expensesCounter);
-            setIncome(incomeCounter);
-
-            setTypes(transactionsType);
-          } else {
-            alert('No found user data.');
-          }
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+          setTypes(transactionsType);
+        }
+      });
     }
-  }, [userID]);
+  });
+
   const labelsList = [];
   const typesTransactions = [];
   if (types !== []) {
@@ -113,24 +108,15 @@ const LineChart = ({ userID }) => {
     },
   };
 
-  const Spiner = () => {
-    useEffect(() => {
-      const timeout = setTimeout(() => {
-        setIsLoadingVisible(true);
-      }, 500);
-      return () => {
-        clearTimeout(timeout);
-      };
-    }, []);
-
-    return isLoadingVisible ? <p>loading</p> : null;
+  const changeLoadingVisible = () => {
+    setIsLoadingVisible(true);
   };
 
   return (
     <>
       <StyledWrapper>
         {Loader ? (
-          <Spiner />
+          <Spiner isLoadingVisible changeLoadingVisible={changeLoadingVisible} />
         ) : emptyTransactions ? (
           <HeaderText white>Add your first transaction if you want see stats.</HeaderText>
         ) : (

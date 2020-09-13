@@ -11,11 +11,11 @@ import {
   StyledHeader,
   StyledButton,
   StyledInput,
-} from './UserSettingsView.css.js';
+} from './FirstLoginUserWallet.css.js';
 
 const CurrenciesList = ['PLN', 'EUR', 'GBP', 'USD', 'CH'];
 
-const UserSettingsView = ({ userId }) => {
+const FirstLoginUserWallet = ({ userId }) => {
   const [currency, setCurrency] = useState('PLN');
   const history = useHistory();
 
@@ -99,4 +99,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(UserSettingsView);
+export default connect(mapStateToProps, null)(FirstLoginUserWallet);
