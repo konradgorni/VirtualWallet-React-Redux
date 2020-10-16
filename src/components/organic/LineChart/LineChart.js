@@ -15,50 +15,44 @@ const LineChart = ({ userID }) => {
   const [Loader, setLoader] = useState(true);
   const [isLoadingVisible, setIsLoadingVisible] = useState(false);
 
+  const countStatistic = (tran) => {
+    const result = tran.reduce(
+      (map, field) => {
+        if (!map[field.type]) {
+          map.transactionList[field.type] = 1;
+        } else {
+          map.transactionList[field.type]++;
+        }
+        field.cash > 0 ? map.income++ : map.expenses++;
+        return map;
+      },
+      {
+        income: 0,
+        expenses: 0,
+        transactionList: {
+          INCOME: 0,
+          BILLS: 0,
+          FOOD: 0,
+          OTHER: 0,
+          CAR: 0,
+          UNEXPECTED: 0,
+          ENTERTAINMENT: 0,
+        },
+      },
+    );
+    return result;
+  };
+
   useEffect(() => {
     if (userID !== null) {
-      fireStoreFetch(userID).then((response) => {
-        const transactions = response.transactions;
-        const empty = response.emptyTransactions;
-
-        if (empty !== undefined) {
-          setEmptyTransactions(response.emptyTransactions);
-          setLoader(false);
-        }
-        if (empty === false) {
-          const transactionsType = {
-            INCOME: 0,
-            BILLS: 0,
-            FOOD: 0,
-            OTHER: 0,
-            CAR: 0,
-            UNEXPECTED: 0,
-            ENTERTAINMENT: 0,
-          };
-
-          transactions.map((transaction) => {
-            const typeTr = transaction.type;
-            transactionsType[typeTr] += +1;
-            return null;
-          });
-
-          let incomeCounter = 0;
-          let expensesCounter = 0;
-
-          transactions.map((transaction) => {
-            const cashSymbol = transaction.cash;
-            if (cashSymbol > 0) {
-              incomeCounter += cashSymbol;
-            } else if (cashSymbol < 0) {
-              expensesCounter += cashSymbol;
-            }
-
-            return null;
-          });
-          setExpenses(expensesCounter);
-          setIncome(incomeCounter);
-
-          setTypes(transactionsType);
+      fireStoreFetch(userID).then(({ transactions, emptyTransactions }) => {
+        setEmptyTransactions(emptyTransactions);
+        setLoader(false);
+        if (transactions.length) {
+          const { income, expenses, transactionList } = countStatistic(transactions);
+          setExpenses(expenses);
+          setIncome(income);
+          setTypes(transactionList);
         }
       });
     }

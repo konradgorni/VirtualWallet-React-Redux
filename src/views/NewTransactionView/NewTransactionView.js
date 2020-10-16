@@ -80,10 +80,10 @@ const NewTrasactionView = ({ userId }) => {
     const payDateMonth = payDate.substr(2, 2);
 
     const salaryy = salary * 1;
-
-    if (currentDay === payDateDay && currentMonth === payDateMonth) {
-      addNewTransaction('Montly Payment', salaryy, 'INCOME', true);
-    }
+console.log(`current day${currentDay} currentmont ${currentMonth} paydateday ${payDateDay} paydatemont ${payDateMonth}`)
+    // if (currentDay === payDateDay && currentMonth === payDateMonth) {
+    //   addNewTransaction('Montly Payment', salaryy, 'INCOME', true);
+    // }
   };
 
   const idUser = userId;
@@ -105,6 +105,7 @@ const NewTrasactionView = ({ userId }) => {
     }
   }, [idUser]);
 
+  const optionValues = ['INCOME', 'BILLS', 'FOOD', 'ENTERTAINMENT', 'CAR', 'UNEXPECTED', 'OTHER'];
   return (
     <>
       <StyledWrapper>
@@ -138,13 +139,9 @@ const NewTrasactionView = ({ userId }) => {
               <StyledInput placeholder="Costs with sign -" type="number" name="cash" />
               <StyledErrorMessage name="cash" component="div" />
               <Field name="type" as={StyledSelect}>
-                <option value="INCOME">INCOME</option>
-                <option value="BILLS">BILLS</option>
-                <option value="FOOD">FOOD</option>
-                <option value="ENTERTAINMENT">ENTERTAINMENT</option>
-                <option value="CAR">CAR</option>
-                <option value="UNEXPECTED">UNEXPECTED EXPENSES</option>
-                <option value="OTHER">OTHER</option>
+                {optionValues.map((option) => (
+                  <option value={option}>{option}</option>
+                ))}
               </Field>
               <StyledButton onClick={addNewTransaction} type="submit">
                 Add

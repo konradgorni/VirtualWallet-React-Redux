@@ -30,30 +30,28 @@ const TransactionPageView = ({ userID }) => {
   const [bilans, setBilans] = useState(0);
   const [currency, setCurrency] = useState(0);
 
+  const countIncomeExpenses = (transactions) => {
+    const result = transactions.reduce(
+      (map, field) => {
+        field.cash > 0 ? (map.incomeCounter += field.cash) : (map.expensesCounter += field.cash);
+
+        return map;
+      },
+      { incomeCounter: 0, expensesCounter: 0 },
+    );
+
+    return result;
+  };
+
   const data = useRef(getData());
+
   useEffect(() => {
     if (userID != null) {
-      fireStoreFetch(userID).then((response) => {
-        const transactions = response.transactions;
-        const salary = response.salary;
-
-        let incomeCounter = 0;
-        let expensesCounter = 0;
-
-        transactions.map((transaction) => {
-          const cashSymbol = transaction.cash;
-          if (cashSymbol > 0) {
-            incomeCounter += cashSymbol;
-          } else if (cashSymbol < 0) {
-            expensesCounter += cashSymbol;
-          }
-
-          return null;
-        });
-
+      fireStoreFetch(userID).then(({ transactions, salary, currency }) => {
         setTransactionsList(transactions.reverse().slice(0, 5));
+        setCurrency(currency);
+        const { incomeCounter, expensesCounter } = countIncomeExpenses(transactions);
         setBilans(incomeCounter + expensesCounter + salary);
-        setCurrency(response.currency);
       });
     }
   }, [userID]);

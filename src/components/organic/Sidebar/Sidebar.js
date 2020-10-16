@@ -37,7 +37,7 @@ const Sidebar = () => {
         </Link>
 
         <div>
-          <Link>
+          <Link to="">
             <StyledIcon onClick={singout} icon={faSignOutAlt} size="3x" color="#f69e7b" />
           </Link>
         </div>
