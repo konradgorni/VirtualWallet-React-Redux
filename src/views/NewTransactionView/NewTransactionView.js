@@ -72,18 +72,14 @@ const NewTrasactionView = ({ userId }) => {
   };
 
   const nextPaymentChecker = (payDate, salary) => {
-    let nextPaymentDate = new Date().toLocaleDateString();
-    const currentDay = nextPaymentDate.substr(0, 1);
-    const currentMonth = nextPaymentDate.substr(2, 2);
-
-    const payDateDay = payDate.substr(0, 1);
-    const payDateMonth = payDate.substr(2, 2);
-
+    let todayDate = new Date().toLocaleDateString();
     const salaryy = salary * 1;
-console.log(`current day${currentDay} currentmont ${currentMonth} paydateday ${payDateDay} paydatemont ${payDateMonth}`)
-    // if (currentDay === payDateDay && currentMonth === payDateMonth) {
-    //   addNewTransaction('Montly Payment', salaryy, 'INCOME', true);
-    // }
+
+    if (todayDate === payDate) {
+      return addNewTransaction('Montly Payment', salaryy, 'INCOME', true);
+    } else {
+      return null;
+    }
   };
 
   const idUser = userId;
